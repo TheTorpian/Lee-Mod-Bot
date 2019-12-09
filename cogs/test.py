@@ -1,5 +1,6 @@
 import discord.utils
 from discord.ext import commands
+from tokenfile import Vars
 
 
 class TestCog(commands.Cog):
@@ -16,6 +17,7 @@ class TestCog(commands.Cog):
 			await ctx.send('You don\'t have the role')
 
 	@commands.command()
+	@commands.check(Vars.user_is_me)
 	async def test_assign(self, ctx):
 		role = discord.utils.get(ctx.author.guild.roles, name='test')
 		await ctx.author.add_roles(role)
