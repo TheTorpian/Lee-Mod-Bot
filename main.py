@@ -19,7 +19,7 @@ cogs = [
 ]
 
 bot = commands.Bot(command_prefix=get_prefix)
-bot.remove_command('help')  # removes default help command
+# bot.remove_command('help')  # removes default help command
 
 if __name__ == '__main__':
 	for cog in cogs:
@@ -46,13 +46,6 @@ async def _restart(ctx):
 	print('Logging out...\n')
 	subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
 	await bot.logout()  # logs out the app
-
-
-@bot.event
-async def on_member_join(member):
-	role = discord.utils.get(member.guild.roles, name='baby chicks')
-	if role not in member.roles:
-		await member.add_roles(role)
 
 
 @bot.event
