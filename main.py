@@ -19,7 +19,7 @@ cogs = [
 ]
 
 bot = commands.Bot(command_prefix=get_prefix)
-# bot.remove_command('help')  # removes default help command
+bot.remove_command('help')  # removes default help command
 
 if __name__ == '__main__':
 	for cog in cogs:
