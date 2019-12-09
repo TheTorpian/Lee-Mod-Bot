@@ -15,6 +15,7 @@ def get_prefix(bot, message):
 
 cogs = [
 	'cogs.admin',
+	'cogs.help',
 	'cogs.test',
 ]
 
@@ -50,7 +51,7 @@ async def _restart(ctx):
 
 @bot.event
 async def on_ready():
-	game = discord.Activity(name='l! (that\'s a lowercase l)', type=discord.ActivityType.listening)
+	game = discord.Activity(name='l!help', type=discord.ActivityType.listening)
 	await bot.change_presence(status=discord.Status.online, activity=game)
 	print(f'{datetime.now()}')
 	print(f'Logged in as {bot.user.name}')
