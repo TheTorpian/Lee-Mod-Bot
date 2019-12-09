@@ -14,11 +14,6 @@ class AdminCog(commands.Cog):
 		if role not in member.roles:
 			await member.add_roles(role)
 
-	@commands.command(pass_context=True)  # just like say but in a specified channel
-	@commands.check(Vars.user_is_me)
-	async def says(self, ctx, ch, *args):
-		channel = self.bot.get_channel(int(ch))
-		await channel.send(' '.join(args))
 
 	@commands.command()  # adds letmeknow role
 	async def letmeknow(self, ctx):
