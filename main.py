@@ -2,10 +2,10 @@ import discord
 from datetime import datetime
 from discord.ext import commands
 from tokenfile import Vars
-import subprocess
+
+import os
 
 TOKEN = Vars.TOKEN
-restart_bat = Vars.restart_bat
 
 
 def get_prefix(bot, message):
@@ -45,9 +45,8 @@ async def _restart(ctx):
     channel = bot.get_channel(581478717046521880)
     await channel.send('Restarting...')
     print('Logging out...\n')
-    subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
     await bot.logout()  # logs out the app
-
+    os.execl('kill.sh', '')
 
 @bot.event
 async def on_ready():
