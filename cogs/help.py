@@ -12,9 +12,10 @@ class HelpCog(commands.Cog):
     @commands.command(when_mentioned=True, aliases=['commands'])
     async def help(self, ctx, *args):
         commands = OrderedDict()
-        commands['letmeknow'] = ['Get the letmeknow role, useful for getting pings when Lee goes live', '', '']
-        commands['help, commands'] = ['It\'s this command', '[command]', '']
-        commands['invite'] = ['Get the invite link', '', '']
+        commands['letmeknow'] = ['Get the letmeknow role, useful for getting pings when Lee goes live', '']
+        commands['mute <mention>'] = ['Mutes the tagged user', '<mention>']
+        commands['unmute <mention>'] = ['Unutes the tagged user', '<mention>']
+        commands['help|commands [command]'] = ['It\'s this command', '[command]']
 
         prefix = 'l!'
 
