@@ -44,9 +44,9 @@ class FunCog(commands.Cog):
 
 
     async def egg_pun_deleter(ctx):  # checks for egg in message
-        words = re.search(r'\w*egg\w+', ctx.content, re.IGNORECASE)
+        words = re.search(r'egg', ctx.content, re.IGNORECASE)
         if words is not None:
-            await ctx.delete()
+            await ctx.content.delete()
 
 
 def setup(bot):
