@@ -35,7 +35,7 @@ class FunCog(commands.Cog):
 
     @commands.command()  # Happy birthday Lee
     async def birthday(self, ctx):
-        await ctx.send('Happy birthday Lee <:LeeBday:519424058652098560>')
+        await ctx.send('https://imgur.com/xFTOsJe')
 
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
@@ -43,7 +43,7 @@ class FunCog(commands.Cog):
 
 
     async def egg_pun_deleter(ctx):  # checks for egg in message
-        words = re.search(r'\w*egg(?!s)\w+', ctx.content, re.IGNORECASE)
+        words = re.search(r'\w*egg\w+', ctx.content, re.IGNORECASE)
         if words is not None:
             await ctx.delete()
 
