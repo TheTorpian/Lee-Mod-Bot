@@ -13,8 +13,10 @@ class HelpCog(commands.Cog):
     async def help(self, ctx, *args):
         commands = OrderedDict()
         commands['letmeknow'] = ['Get the letmeknow role, useful for getting pings when Lee goes live', '']
-        commands['mute <mention>'] = ['Mutes the tagged user', '<mention>']
-        commands['unmute <mention>'] = ['Unutes the tagged user', '<mention>']
+        commands['morning'] = ['Good morning to our glorious Supreme Leader', '']
+        commands['challenge <mention>'] = ['Challenge another user', '<mention>']
+        commands['mute <mention>'] = ['Mutes the tagged user (Security only)', '<mention>']
+        commands['unmute <mention>'] = ['Unutes the tagged user (Security only)', '<mention>']
         commands['help|commands [command]'] = ['It\'s this command', '[command]']
 
         prefix = 'l!'
