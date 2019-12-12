@@ -1,5 +1,6 @@
 import discord.utils
 from discord.ext import commands
+from discord.ext.commands import has_permissions
 from tokenfile import Vars
 
 
