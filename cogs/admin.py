@@ -15,26 +15,18 @@ class AdminCog(commands.Cog):
             await member.add_roles(role)
 
     @commands.command()  # mute user
-    @commands.has_role('Security')
+    @has_permissions(administrator=True, manage_roles=True)
     async def mute(self, ctx, user: discord.Member):
-        admin = discord.utils.get(ctx.guild.roles, name='Security')
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
-        if admin in ctx.author.roles:
-            await user.add_roles(timeout)
-            await ctx.send(f'{user} has been muted.')
-        else:
-            await ctx.send(f'You need the {admin} role.')
+        await user.add_roles(timeout)
+        await ctx.send(f'{user} has been muted.')
 
     @commands.command()  # unmute user
-    @commands.has_role('Security')
+    @has_permissions(administrator=True, manage_roles=True)
     async def unmute(self, ctx, user: discord.Member):
-        admin = discord.utils.get(ctx.guild.roles, name='Security')
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
-        if admin in ctx.author.roles:
-            await user.remove_roles(timeout)
-            await ctx.send(f'{user} has been unmuted.')
-        else:
-            await ctx.send(f'You need the {admin} role.')
+        await user.remove_roles(timeout)
+        await ctx.send(f'{user} has been unmuted.')
 
     @commands.command()  # adds letmeknow role
     async def letmeknow(self, ctx):
