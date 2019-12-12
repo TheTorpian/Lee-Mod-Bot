@@ -17,6 +17,7 @@ cogs = [
     'cogs.admin',
     'cogs.help',
     'cogs.test',
+    'cogs.fun'
 ]
 
 bot = commands.Bot(command_prefix=get_prefix)
