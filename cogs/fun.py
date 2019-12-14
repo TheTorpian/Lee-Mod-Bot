@@ -46,14 +46,12 @@ class FunCog(commands.Cog):
 
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
-        await egg_pun_deleter(ctx)
-
-
-    async def egg_pun_deleter(ctx):  # checks for egg in message
+        await self.egg_pun_deleter(ctx)
+    
+    async def egg_pun_deleter(self, ctx):  # checks for egg in message
         words = re.search(r'egg', ctx.content, re.IGNORECASE)
         if words is not None:
             await ctx.message.delete()
-
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
