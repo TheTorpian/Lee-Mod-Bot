@@ -36,7 +36,13 @@ class FunCog(commands.Cog):
 
     @commands.command()  # Happy birthday Lee
     async def birthday(self, ctx):
-        await ctx.send('https://imgur.com/xFTOsJe')
+        array = [
+            'https://imgur.com/XKEfXzW', 
+            'https://imgur.com/xFTOsJe', 
+            'Happy birthday Lee <:LeeBday:519424058652098560>'
+        ]
+        rand = random.randint(0, len(array) - 1)
+        await ctx.send(array[rand])
 
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
