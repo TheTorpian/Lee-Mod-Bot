@@ -4,7 +4,6 @@ from discord.ext.commands import has_permissions
 from tokenfile import check_ignore
 
 
-# @commands.check(check_ignore)
 class AdminCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
