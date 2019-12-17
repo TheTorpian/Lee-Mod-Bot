@@ -11,7 +11,6 @@ class AdminCog(commands.Cog):
     async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
         return check_ignore(ctx, ctx.message.channel.id)
 
-
     @commands.Cog.listener()  # listener, checks on member join, assigns default role
     async def on_member_join(self, member):
         role = discord.utils.get(member.guild.roles, name='baby chicks')
@@ -34,7 +33,7 @@ class AdminCog(commands.Cog):
 
     @commands.command()  # add channel to ignored_channels
     @has_permissions(administrator=True, manage_roles=True)
-    async def ignore_channel(self, ctx, channel = None):
+    async def ignore_channel(self, ctx, channel=None):
         if channel is None:
             channel = str(ctx.message.channel.id)
         if not self.bot.get_channel(int(channel)):
@@ -50,7 +49,7 @@ class AdminCog(commands.Cog):
 
     @commands.command()  # remove channel from ignored_channels
     @has_permissions(administrator=True, manage_roles=True)
-    async def remove_ignore_channel(self, ctx, channel = None):
+    async def remove_ignore_channel(self, ctx, channel=None):
         if channel is None:
             channel = str(ctx.message.channel.id)
         if not self.bot.get_channel(int(channel)):
