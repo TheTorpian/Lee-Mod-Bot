@@ -8,9 +8,6 @@ class AdminCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
-        return check_ignore(ctx, ctx.message.channel.id)
-
     @commands.Cog.listener()  # listener, checks on member join, assigns default role
     async def on_member_join(self, member):
         role = discord.utils.get(member.guild.roles, name='baby chicks')
@@ -18,21 +15,21 @@ class AdminCog(commands.Cog):
             await member.add_roles(role)
 
     @commands.command()  # mute user
-    @has_permissions(administrator=True, manage_roles=True)
+    @has_permissions(manage_roles=True)
     async def mute(self, ctx, user: discord.Member):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         await user.add_roles(timeout)
         await ctx.send(f'{user} has been muted.')
 
     @commands.command()  # unmute user
-    @has_permissions(administrator=True, manage_roles=True)
+    @has_permissions(manage_roles=True)
     async def unmute(self, ctx, user: discord.Member):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         await user.remove_roles(timeout)
         await ctx.send(f'{user} has been unmuted.')
 
     @commands.command()  # add channel to ignored_channels
-    @has_permissions(administrator=True, manage_roles=True)
+    @has_permissions(administrator=True)
     async def ignore_channel(self, ctx, channel=None):
         if channel is None:
             channel = str(ctx.message.channel.id)
@@ -48,7 +45,7 @@ class AdminCog(commands.Cog):
                 await ctx.send(f'Channel `{channel}` already ignored.')
 
     @commands.command()  # remove channel from ignored_channels
-    @has_permissions(administrator=True, manage_roles=True)
+    @has_permissions(administrator=True)
     async def remove_ignore_channel(self, ctx, channel=None):
         if channel is None:
             channel = str(ctx.message.channel.id)
