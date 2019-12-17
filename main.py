@@ -1,7 +1,6 @@
 import discord
 from datetime import datetime
 from discord.ext import commands
-from tokenfile import Vars
 from tokenfile import Vars, user_is_torp
 # import subprocess  # windows
 import os  # linux

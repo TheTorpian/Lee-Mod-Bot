@@ -12,7 +12,6 @@ class FunCog(commands.Cog):
     async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
         return check_ignore(ctx, ctx.message.channel.id)
 
-
     @commands.command()
     async def morning(self, ctx):
         await ctx.send('https://tenor.com/view/leader-kim-jong-un-north-korea-gif-8893271')
@@ -41,8 +40,8 @@ class FunCog(commands.Cog):
     @commands.command()  # Happy birthday Lee
     async def birthday(self, ctx):
         array = [
-            'https://imgur.com/XKEfXzW', 
-            'https://imgur.com/xFTOsJe', 
+            'https://imgur.com/XKEfXzW',
+            'https://imgur.com/xFTOsJe',
             'Happy birthday Lee <:LeeBday:519424058652098560>'
         ]
         rand = random.randint(0, len(array) - 1)
@@ -51,11 +50,12 @@ class FunCog(commands.Cog):
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
         await self.egg_pun_deleter(ctx)
-    
+
     async def egg_pun_deleter(self, ctx):  # checks for egg in message
         words = re.search(r'egg[^s\s\W]|eggs\w|\w[2:]egg|\wegg\w', ctx.content, re.IGNORECASE)
         if words is not None:
             await ctx.delete()
+
 
 def setup(bot):
     bot.add_cog(FunCog(bot))

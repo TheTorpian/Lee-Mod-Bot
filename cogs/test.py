@@ -1,6 +1,6 @@
 import discord.utils
 from discord.ext import commands
-from tokenfile import Vars, check_ignore, user_is_torp
+from tokenfile import check_ignore, user_is_torp
 
 
 class TestCog(commands.Cog):
@@ -10,10 +10,9 @@ class TestCog(commands.Cog):
     async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
         return check_ignore(ctx, ctx.message.channel.id)
 
-
     @commands.command()
     @commands.has_role('Security')
-    @user_is_torp()    
+    @user_is_torp()
     async def test_role(self, ctx):
         role = discord.utils.get(ctx.guild.roles, name='Security')
         if role in ctx.author.roles:
