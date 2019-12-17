@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
 
 @bot.command(name='reload', pass_context=True)  # reloads all cogs
-@commands.check(Vars.user_is_me)
+@user_is_torp()
 async def _reload(ctx):
     try:
         for cog in cogs:
@@ -42,6 +42,7 @@ async def _reload(ctx):
 
 @bot.command(name='restart', pass_context=True)  # restarts bot app
 @commands.check(Vars.user_is_me)
+@user_is_torp()
 async def _restart(ctx):
     channel = bot.get_channel(581478717046521880)
     await channel.send('Restarting...')
