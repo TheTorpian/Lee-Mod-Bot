@@ -2,10 +2,12 @@ import discord
 from datetime import datetime
 from discord.ext import commands
 from tokenfile import Vars
-
-import os
+from tokenfile import Vars, user_is_torp
+# import subprocess  # windows
+import os  # linux
 
 TOKEN = Vars.TOKEN
+# restart_bat = Vars.restart_bat
 
 
 def get_prefix(bot, message):
@@ -41,14 +43,18 @@ async def _reload(ctx):
 
 
 @bot.command(name='restart', pass_context=True)  # restarts bot app
-@commands.check(Vars.user_is_me)
 @user_is_torp()
 async def _restart(ctx):
     channel = bot.get_channel(581478717046521880)
     await channel.send('Restarting...')
     print('Logging out...\n')
+    # # for windows
+    # subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
+    # await bot.logout()  # logs out the app
+    # for linux
     await bot.logout()  # logs out the app
     os.execl('kill.sh', '')
+
 
 @bot.event
 async def on_ready():
