@@ -1,7 +1,7 @@
 import discord.utils
 from discord.ext import commands
 from discord.ext.commands import has_permissions
-from tokenfile import check_ignore
+from tokenfile import check_ignore, Vars
 
 
 class AdminCog(commands.Cog):
@@ -13,6 +13,13 @@ class AdminCog(commands.Cog):
         role = discord.utils.get(member.guild.roles, name='baby chicks')
         if role not in member.roles:
             await member.add_roles(role)
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        if message.author.id != Vars.poleece_tag:
+            msg = f'{message.author}: {message.content}'
+            log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
+            await log_channel.send(msg)
 
     @commands.command()  # mute user
     @has_permissions(manage_roles=True)
