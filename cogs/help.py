@@ -16,7 +16,9 @@ class HelpCog(commands.Cog):
         commands['morning'] = ['Good morning to our glorious Supreme Leader', '']
         commands['challenge <mention>'] = ['Challenge another user', '<mention>']
         commands['mute <mention>'] = ['Mutes the tagged user (Security only)', '<mention>']
-        commands['unmute <mention>'] = ['Unutes the tagged user (Security only)', '<mention>']
+        commands['unmute <mention>'] = ['Unmutes the tagged user (Security only)', '<mention>']
+        commands['ignore_channel [channel_id]'] = ['Adds [channel_id] to ignored channels; adds current channel if no parameter given (Security only)', '[channel_id]']
+        commands['remove_ignore_channel [channel_id]'] = ['same as ignore_channel, but it removes the channel from the list (Security only)', '[channel_id]']
         commands['help|commands [command]'] = ['It\'s this command', '[command]']
 
         prefix = 'l!'
