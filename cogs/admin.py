@@ -17,7 +17,14 @@ class AdminCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         if message.author.id != Vars.poleece_tag:
-            msg = f'{message.author}: {message.content}'
+            msg = f'{message.author} in <#{message.channel.id}>: {message.content}'
+            log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
+            await log_channel.send(msg)
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+        if before.author.id != Vars.poleece_tag:
+            msg = f'{before.author} in <#{before.channel.id}>\nOriginal: {before.content}\nEdited: {after.content}'
             log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
             await log_channel.send(msg)
 
