@@ -20,6 +20,12 @@ class TestCog(commands.Cog):
         else:
             await ctx.send('You don\'t have the role')
 
+    @commands.command(pass_context=True)  # says args in code block
+    @user_is_torp()
+    async def get_args(self, ctx, *args):
+        tag = ' '.join(args)
+        await ctx.send(f'`{tag}`')
+
     @commands.command(pass_context=True)  # just like say but in a specified channel
     @user_is_torp()
     async def says(self, ctx, ch, *args):
