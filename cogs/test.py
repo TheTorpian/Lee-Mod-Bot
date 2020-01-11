@@ -1,6 +1,7 @@
 import discord.utils
+from datetime import datetime
 from discord.ext import commands
-from tokenfile import check_ignore, user_is_torp
+from tokenfile import Vars, check_ignore, user_is_torp
 
 
 class TestCog(commands.Cog):
@@ -19,6 +20,17 @@ class TestCog(commands.Cog):
             await ctx.send(f'You already have the role {role.name}')
         else:
             await ctx.send('You don\'t have the role')
+
+    @commands.command()
+    @user_is_torp()
+    async def test_embed(self, ctx):
+        embed = discord.Embed(description='Edited message', color=0xed1c27)
+        embed.add_field(name='Original', value='before.content', inline=True)
+        embed.add_field(name='Edited', value='after.content', inline=True)
+        embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
+
+        log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel_test))
+        await log_channel.send(embed=embed)
 
     @commands.command(pass_context=True)  # says args in code block
     @user_is_torp()
