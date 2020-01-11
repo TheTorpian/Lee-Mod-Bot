@@ -91,6 +91,12 @@ class AdminCog(commands.Cog):
             await ctx.author.add_roles(role)
             await ctx.send('Role added!')
 
+    @commands.command()
+    async def time(self, ctx):
+        utc_now = pytz.utc.localize(datetime.utcnow())
+        kst_now = utc_now.astimezone(pytz.timezone('Asia/Seoul'))
+        await ctx.send(f'Lee\'s time is currently {kst_now.hour}:{kst_now.minute}, {kst_now.day}/{kst_now.month}/{kst_now.year}')
+
 
 def setup(bot):
     bot.add_cog(AdminCog(bot))
