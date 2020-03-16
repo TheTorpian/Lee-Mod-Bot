@@ -38,6 +38,12 @@ class TestCog(commands.Cog):
         tag = ' '.join(args)
         await ctx.send(f'`{tag}`')
 
+    @commands.command(pass_context=True)  # says args in code block
+    @user_is_torp()
+    async def get_guild(self, ctx):
+        await ctx.send(f'`{ctx.guild.id}`')
+
+
     @commands.command(pass_context=True)  # just like say but in a specified channel
     @user_is_torp()
     async def says(self, ctx, ch, *args):
