@@ -2,11 +2,10 @@ import discord
 from datetime import datetime
 from discord.ext import commands
 from tokenfile import Vars, user_is_torp
-# import subprocess  # windows
-import os  # linux
+import subprocess
 
 TOKEN = Vars.TOKEN
-# restart_bat = Vars.restart_bat
+restart_bat = Vars.restart_bat
 
 
 def get_prefix(bot, message):
@@ -47,12 +46,8 @@ async def _reload(ctx):
 async def _restart(ctx):
     await ctx.send('Restarting...')
     print('Logging out...\n')
-    # # for windows
-    # subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
-    # await bot.logout()  # logs out the app
-    # for linux
+    subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
     await bot.logout()  # logs out the app
-    os.execl('kill.sh', '')
 
 
 @bot.event
