@@ -18,24 +18,26 @@ class AdminCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        if message.author.id != Vars.poleece_tag:
-            embed = discord.Embed(description='Deleted message', color=0xed1c27)
-            embed.add_field(name='Content', value=message.content, inline=True)
-            embed.add_field(name='Channel', value=message.channel.name, inline=False)
-            embed.set_footer(text=message.author, icon_url=message.author.avatar_url)
-            log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
-            await log_channel.send(embed=embed)
+        if message.guild.id != 542698023973683220:
+            if message.author.id != Vars.poleece_tag:
+                embed = discord.Embed(description='Deleted message', color=0xed1c27)
+                embed.add_field(name='Content', value=message.content, inline=True)
+                embed.add_field(name='Channel', value=message.channel.name, inline=False)
+                embed.set_footer(text=message.author, icon_url=message.author.avatar_url)
+                log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
+                await log_channel.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        if before.author.id != Vars.poleece_tag and before.content != after.content:
-            embed = discord.Embed(description='Edited message', color=0xed1c27)
-            embed.add_field(name='Original', value=before.content, inline=True)
-            embed.add_field(name='Edited', value=after.content, inline=True)
-            embed.add_field(name='Channel', value=before.channel.name, inline=False)
-            embed.set_footer(text=before.author, icon_url=before.author.avatar_url)
-            log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
-            await log_channel.send(embed=embed)
+        if before.guild.id != 542698023973683220:
+            if before.author.id != Vars.poleece_tag and before.content != after.content:
+                embed = discord.Embed(description='Edited message', color=0xed1c27)
+                embed.add_field(name='Original', value=before.content, inline=True)
+                embed.add_field(name='Edited', value=after.content, inline=True)
+                embed.add_field(name='Channel', value=before.channel.name, inline=False)
+                embed.set_footer(text=before.author, icon_url=before.author.avatar_url)
+                log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
+                await log_channel.send(embed=embed)
 
     @commands.command()  # mute user
     @has_permissions(manage_roles=True)
