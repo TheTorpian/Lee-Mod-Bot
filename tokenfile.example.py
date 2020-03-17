@@ -1,4 +1,27 @@
 from discord.ext import commands
+import mysql.connector as mysql
+
+connection = None
+
+
+def init_db():
+    return mysql.connect(
+        host="",
+        user="",
+        password="",
+        database=""
+    )
+
+
+def get_cursor(conn):
+    try:
+        conn.ping(reconnect=True, attempts=3, delay=5)
+    except mysql.Error:
+        conn = init_db()
+    return conn.cursor()
+
+
+connection = init_db()
 
 
 class Vars:
