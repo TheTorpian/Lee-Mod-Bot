@@ -2,6 +2,7 @@ import re
 import random
 from discord.ext import commands
 from discord.ext.commands import has_permissions
+from fuzzywuzzy import fuzz
 from sql import sql_quotes
 
 tformat = '%d.%m.%Y'
@@ -12,18 +13,32 @@ class QuotesCog(commands.Cog):
         self.bot = bot
 
     @commands.command(aliases=['q'])  # gets a random or selected quote from server
-    async def quote(self, ctx, *quote_nr: int):
+    async def quote(self, ctx, *quote_arg):
         try:
-            quotes = sql_quotes.get_quote(ctx.guild.id)
-            if not quote_nr:  # if command is called without args
-                quote_nr = random.randint(0, len(quotes) - 1)
+            # quotes = sql_quotes.get_quote(ctx.guild.id)
+            quotes = sql_quotes.get_quote(511192102273548292)
+
+            if not quote_arg:  # if command is called without args
+                quote_arg = random.randint(0, len(quotes) - 1)
+                quote = quotes[quote_arg]
             else:
-                quote_nr = int(quote_nr[0])
-                quote_nr -= 1
-            quote = quotes[quote_nr]
+                quote_arg = quote_arg[0]  # command args are in a tuple, we only need the first result anyway
+                match_nr = re.match(r'^[0-9]*$', quote_arg)
+                if match_nr:  # if command is called with a quote number
+                    quote_arg = int(quote_arg[0])
+                    quote_arg -= 1
+                    quote = quotes[quote_arg]
+                else:
+                    quotes_result = list()
+                    for quote in quotes:
+                        if fuzz.token_sort_ratio(quote_arg, quote[1]) > 80:
+                            quotes_result.append(quote)
+                    # await ctx.send(quotes_result)
+                    quote = random.choice(quotes_result)
+
             time = quote[3].strftime(tformat)
-            str_quote = f'Quote #{quote_nr+1}: {quote[2]} - {quote[1]} ({time})'
-            await ctx.send(str_quote)
+            final_quote = f'#{quote[0]}: {quote[2]} - {quote[1]} ({time})'
+            await ctx.send(final_quote)
         except IndexError:
             await ctx.send('No quote found')
 
@@ -40,7 +55,6 @@ class QuotesCog(commands.Cog):
     @commands.command()  # deletes quote
     @has_permissions(manage_messages=True)
     async def remove_quote(self, ctx, quote_nr):
-        # await ctx.send(f'`{type(int(quote_nr))}`')
         sql_quotes.remove_quote(int(quote_nr))
         await ctx.send(f'Quote {quote_nr} deleted')
 
