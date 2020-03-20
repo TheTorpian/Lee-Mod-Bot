@@ -55,7 +55,7 @@ class AdminCog(commands.Cog):
 
     @commands.command()  # add channel to ignored_channels
     @has_permissions(administrator=True)
-    async def ignore_channel(self, ctx, channel=None):
+    async def ignore(self, ctx, channel=None):
         if channel is None:
             channel = str(ctx.message.channel.id)
         if not self.bot.get_channel(int(channel)):
@@ -71,7 +71,7 @@ class AdminCog(commands.Cog):
 
     @commands.command()  # remove channel from ignored_channels
     @has_permissions(administrator=True)
-    async def remove_ignore_channel(self, ctx, channel=None):
+    async def del_ignore(self, ctx, channel=None):
         if channel is None:
             channel = str(ctx.message.channel.id)
         if not self.bot.get_channel(int(channel)):
@@ -87,6 +87,17 @@ class AdminCog(commands.Cog):
                 await ctx.send(f'Removed `{channel}` from ignored list.')
             else:
                 await ctx.send(f'Channel `{channel}` is not ignored.')
+
+    @commands.command()  # lists ignored channels
+    @has_permissions(manage_roles=True)
+    async def list_ignored(self, ctx):
+        with open(Vars.ignored_channels, 'r') as f:
+            lines = f.readlines()
+        msg = ''
+        for line in lines:
+            line = line.strip('\n')
+            msg += f'<#{line}>\n'
+        await ctx.send(msg)
 
     @commands.command()  # adds letmeknow role
     async def letmeknow(self, ctx):
