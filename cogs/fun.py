@@ -48,6 +48,11 @@ class FunCog(commands.Cog):
         rand = random.randint(0, len(array) - 1)
         await ctx.send(array[rand])
 
+    @commands.command()  # best birthday video
+    async def best_birthday(self, ctx):
+        msg = 'https://youtu.be/dq8iDBFvMm8'
+        await ctx.send(msg)
+
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
         await self.egg_pun_deleter(ctx)
