@@ -42,7 +42,8 @@ class FunCog(commands.Cog):
         array = [
             'https://imgur.com/XKEfXzW',
             'https://imgur.com/xFTOsJe',
-            'Happy birthday Lee <:LeeBday:519424058652098560>'
+            'Happy birthday Lee <:LeeBday:519424058652098560>',
+            'https://youtu.be/dq8iDBFvMm8'
         ]
         rand = random.randint(0, len(array) - 1)
         await ctx.send(array[rand])
