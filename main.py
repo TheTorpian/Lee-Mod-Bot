@@ -18,7 +18,8 @@ cogs = [
     'cogs.help',
     'cogs.fun',
     'cogs.quotes',
-    'cogs.test'
+    'cogs.test',
+    'cogs.error_handler'
 ]
 
 bot = commands.Bot(command_prefix=get_prefix)
