@@ -53,6 +53,11 @@ class FunCog(commands.Cog):
         msg = 'https://youtu.be/dq8iDBFvMm8'
         await ctx.send(msg)
 
+    @commands.command()  # best birthday video
+    async def torp_shag(self, ctx):
+        msg = 'https://youtu.be/7wdh3KLm9Xo'
+        await ctx.send(msg)
+
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
         await self.egg_pun_deleter(ctx)
