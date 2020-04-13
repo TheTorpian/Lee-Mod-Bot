@@ -11,6 +11,13 @@ def add_quote(tag, quote, sv):  # adds quote to db
     db.commit()
 
 
+def add_quote_no_user(quote, sv):  # adds quote to db when no username is provided
+    cursor = tokenfile.get_cursor(connection)
+    query = 'INSERT INTO Quote (quote, server_id) VALUES (%s, %s)'
+    cursor.execute(query, (quote, sv))
+    db.commit()
+
+
 def remove_quote(quote_nr):  # removes quote from db
     cursor = tokenfile.get_cursor(connection)
     query = 'DELETE FROM Quote WHERE id = %s'
@@ -25,9 +32,17 @@ def update_quote(quote_nr, quote):  # alters quote
     db.commit()
 
 
-def get_quote(sv):  # gets a random quote from current server
+def get_quote():  # gets a random quote from current server
     cursor = tokenfile.get_cursor(connection)
-    query = 'SELECT id, quoted_tag, quote, tstamp FROM Quote WHERE server_id = %s'
-    cursor.execute(query, (sv,))
+    query = 'SELECT id, quoted_tag, quote, tstamp FROM Quote'
+    cursor.execute(query,)
     quotes = cursor.fetchall()  # returns list of tuples, use double index to get actual values
+    return quotes
+
+
+def get_last_quote():  # gets a random quote from current server
+    cursor = tokenfile.get_cursor(connection)
+    query = 'SELECT id FROM Quote ORDER BY id DESC LIMIT 1'
+    cursor.execute(query,)
+    quotes = cursor.fetchone()  # query result is just one record, this should work
     return quotes
