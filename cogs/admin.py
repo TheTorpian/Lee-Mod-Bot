@@ -1,7 +1,7 @@
 import discord.utils
 from discord.ext import commands
 from discord.ext.commands import has_permissions
-from tokenfile import check_ignore, Vars
+from tokenfile import check_ignore, add_ban, get_ban_count, Vars
 from datetime import datetime
 import pytz
 
@@ -17,7 +17,7 @@ class AdminCog(commands.Cog):
             await member.add_roles(role)
 
     @commands.Cog.listener()
-    async def on_message_delete(self, message):
+    async def on_message_delete(self, message):  # sends an embed message in the message log channel when a message is deleted
         if message.guild.id != 542698023973683220:
             if message.author.id != Vars.poleece_tag:
                 embed = discord.Embed(description='Deleted message', color=0xed1c27)
@@ -28,7 +28,7 @@ class AdminCog(commands.Cog):
                 await log_channel.send(embed=embed)
 
     @commands.Cog.listener()
-    async def on_message_edit(self, before, after):
+    async def on_message_edit(self, before, after):  # sends an embed message in the message log channel when a message is edited
         if before.guild.id != 542698023973683220:
             if before.author.id != Vars.poleece_tag and before.content != after.content:
                 embed = discord.Embed(description='Edited message', color=0xed1c27)
@@ -44,6 +44,7 @@ class AdminCog(commands.Cog):
     async def mute(self, ctx, user: discord.Member):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         await user.add_roles(timeout)
+        add_ban(str(user.id))
         await ctx.send(f'{user} has been muted.')
 
     @commands.command()  # unmute user
@@ -52,6 +53,44 @@ class AdminCog(commands.Cog):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         await user.remove_roles(timeout)
         await ctx.send(f'{user} has been unmuted.')
+
+    @commands.command(aliases=['yeet'])  # ban user
+    @has_permissions(ban_members=True)
+    async def ban(self, ctx, user_id, reason=None, delete_message_days=0):
+        if not reason:
+            reason = 'No reason'
+        try:
+            user = ctx.guild.get_member(int(user_id))
+            await ctx.guild.ban(user, reason=reason)
+            add_ban(str(user.id))
+            await ctx.send(f'{user} has been banned.')
+        except discord.errors.HTTPException:
+            await ctx.send('No user found.')
+        except ValueError:
+            await ctx.send('You must provide a user id.')
+
+    @commands.command(aliases=['unyeet'])  # unban user
+    @has_permissions(ban_members=True)
+    async def unban(self, ctx, user_id, reason=None):
+        if not reason:
+            reason = 'No reason'
+        try:
+            user = await self.bot.fetch_user(int(user_id))
+            await ctx.guild.unban(user, reason=reason)
+            await ctx.send(f'{user} has been unbanned.')
+        except discord.errors.HTTPException:  # error is raised when unbanning fails
+            await ctx.send('No user found or user is not banned.')
+        except ValueError:
+            await ctx.send('You must provide a user id.')
+
+    @commands.command()  # checks mutes and bans of user
+    @has_permissions(manage_roles=True)
+    async def offenses(self, ctx, user_id):
+        ban_count = get_ban_count(user_id)
+        if ban_count:
+            await ctx.send(f'User has {ban_count} offense(s).')
+        else:
+            await ctx.send('User has no offenses.')
 
     @commands.command()  # add channel to ignored_channels
     @has_permissions(administrator=True)
@@ -62,9 +101,8 @@ class AdminCog(commands.Cog):
             await ctx.send('Not a valid channel')
         else:
             if check_ignore(ctx, channel):  # returns false if channel is in list
-                with open('ignored_channels', 'a+') as f:
+                with open(Vars.ignored_channels, 'a+') as f:
                     f.write(f'{channel}\n')
-                    f.close()
                 await ctx.send(f'Added `{channel}` to ignored list.')
             else:
                 await ctx.send(f'Channel `{channel}` already ignored.')
@@ -78,9 +116,9 @@ class AdminCog(commands.Cog):
             await ctx.send('Not a valid channel')
         else:
             if not check_ignore(ctx, channel):  # returns false if channel is in list
-                with open('ignored_channels', 'r') as f:
+                with open(Vars.ignored_channels, 'r') as f:
                     lines = f.readlines()
-                with open('ignored_channels', 'w') as f:
+                with open(Vars.ignored_channels, 'w') as f:
                     for line in lines:
                         if line.strip('\n') != channel:
                             f.write(line)

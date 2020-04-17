@@ -4,3 +4,4 @@ env/
 tokenfile.py
 restart.bat
 ignored_channels
+ban_count

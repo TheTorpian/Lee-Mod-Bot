@@ -43,6 +43,11 @@ class TestCog(commands.Cog):
     async def get_guild(self, ctx):
         await ctx.send(f'`{ctx.guild.id}`')
 
+    @commands.command(pass_context=True)
+    @user_is_torp()
+    async def say(self, ctx, *args):
+        await ctx.send(' '.join(args))
+
     @commands.command(pass_context=True)  # just like say but in a specified channel
     @user_is_torp()
     async def says(self, ctx, ch, *args):
@@ -54,6 +59,35 @@ class TestCog(commands.Cog):
     async def test_assign(self, ctx):
         role = discord.utils.get(ctx.author.guild.roles, name='test')
         await ctx.author.add_roles(role)
+
+    @commands.command()
+    @user_is_torp()
+    async def test_member(self, ctx, user_id):
+        try:
+            user = await self.bot.fetch_user(int(user_id))
+            await ctx.send(user)
+        except discord.errors.HTTPException:
+            await ctx.send('No user found.')
+        except ValueError:
+            await ctx.send('You must provide a user id.')
+
+    @commands.command()
+    @user_is_torp()
+    async def test_banlist(self, ctx, user):
+        with open(Vars.ban_count, 'r') as f:  # read ban_count file into lines var
+            lines = f.readlines()
+        user_new = True
+        with open(Vars.ban_count, 'w') as f:  # rewrite ban_count file
+            for line in lines:
+                if user in line:  # if given user is in list
+                    newcount = int(line.strip('\n')[-1]) + 1  # increment the ban count by one
+                    newline = f'{user} {newcount}\n'
+                    f.write(newline)  # writes the modified line
+                    user_new = False
+                else:
+                    f.write(line)  # rewrites old line if no need to modify
+            if user_new:
+                f.write(f'{user} 1\n')  # if user doesn't exist in list, it gets added
 
     @commands.command()
     @user_is_torp()
