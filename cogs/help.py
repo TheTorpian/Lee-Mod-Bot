@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from discord.ext import commands
 from tokenfile import Vars
+from sql import sql_ignored
 
 INVITE = Vars.INVITE
 
@@ -8,6 +9,9 @@ INVITE = Vars.INVITE
 class HelpCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
+        return sql_ignored.check_ignore(ctx.message.channel.id)
 
     @commands.command(when_mentioned=True, aliases=['commands'])
     async def help(self, ctx, *args):
@@ -23,9 +27,9 @@ class HelpCog(commands.Cog):
         commands['unmute'] = ['Unmutes the tagged user (Security only)', '<mention>']
         commands['ban'] = ['Bans the tagged user (Security only)', '<mention> [reason] [days to purge]', 'yeet']
         commands['unban'] = ['Unbans the tagged user (Security only)', '<mention> [reason]', 'unyeet']
-        commands['offenses'] = ['Lists the amount of offenses the user has (Security only)', '<mention>', '']
-        commands['ignore'] = ['Adds [channel_id] to ignored channels; adds current channel if no parameter is given (Security only)', '[channel_id]']
-        commands['del_ignore'] = ['Removes channel [channel_id] from the ignored channel list (Security only)', '[channel_id]']
+        commands['offenses'] = ['Lists the amount of offenses the user has (Security only)', '<mention>']
+        commands['ignore'] = ['Adds [channel_id] to ignored channels; adds current channel if no parameter is given (Security only)', '[channel_id]', 'add_ignore']
+        commands['del_ignore'] = ['Removes channel [channel_id] from the ignored channel list (Security only)', '[channel_id]', 'remove_ignore']
         commands['list_ignored'] = ['Lists all ignored channels (Security only)']
         commands['help'] = ['It\'s this command', '[command]', 'commands']
 

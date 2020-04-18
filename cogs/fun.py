@@ -2,7 +2,8 @@ import re
 import random
 import discord
 from discord.ext import commands
-from tokenfile import Vars, check_ignore
+from tokenfile import Vars
+from sql import sql_ignored
 
 
 class FunCog(commands.Cog):
@@ -10,7 +11,7 @@ class FunCog(commands.Cog):
         self.bot = bot
 
     async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
-        return check_ignore(ctx, ctx.message.channel.id)
+        return sql_ignored.check_ignore(ctx.message.channel.id)
 
     @commands.command()
     async def morning(self, ctx):

@@ -1,14 +1,12 @@
 import discord.utils
 from discord.ext import commands
-from tokenfile import Vars, check_ignore, user_is_torp
+from tokenfile import Vars, user_is_torp
+from sql import sql_offenses
 
 
 class TestCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
-        return check_ignore(ctx, ctx.message.channel.id)
 
     @commands.command()
     @commands.has_role('Security')
@@ -74,20 +72,17 @@ class TestCog(commands.Cog):
     @commands.command()
     @user_is_torp()
     async def test_banlist(self, ctx, user):
-        with open(Vars.ban_count, 'r') as f:  # read ban_count file into lines var
-            lines = f.readlines()
-        user_new = True
-        with open(Vars.ban_count, 'w') as f:  # rewrite ban_count file
-            for line in lines:
-                if user in line:  # if given user is in list
-                    newcount = int(line.strip('\n')[-1]) + 1  # increment the ban count by one
-                    newline = f'{user} {newcount}\n'
-                    f.write(newline)  # writes the modified line
-                    user_new = False
-                else:
-                    f.write(line)  # rewrites old line if no need to modify
-            if user_new:
-                f.write(f'{user} 1\n')  # if user doesn't exist in list, it gets added
+        offense = sql_offenses.get_bancount(user)
+        if offense:
+            await ctx.send(f'{offense[0]}')
+        else:
+            await ctx.send('result is none')
+
+    @commands.command()
+    @user_is_torp()
+    async def test_channelname(self, ctx, c_id):
+        channel = self.bot.get_channel(int(c_id))
+        await ctx.send(f'{c_id}: {channel.name}')
 
     @commands.command()
     @user_is_torp()

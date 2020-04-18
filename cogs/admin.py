@@ -1,8 +1,9 @@
 import discord.utils
 from discord.ext import commands
 from discord.ext.commands import has_permissions
-from tokenfile import check_ignore, add_ban, get_ban_count, Vars
+from tokenfile import Vars
 from datetime import datetime
+from sql import sql_ignored, sql_offenses
 import pytz
 
 
@@ -44,7 +45,15 @@ class AdminCog(commands.Cog):
     async def mute(self, ctx, user: discord.Member):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         await user.add_roles(timeout)
-        add_ban(str(user.id))
+
+        # ban counter module
+        offense_count = sql_offenses.get_bancount(user.id)
+        if offense_count:
+            offense_count = offense_count[0]  # result from query is tuple, I need only first (and only) value of tuple
+            sql_offenses.alter_ban(user.id, offense_count + 1)
+        else:
+            sql_offenses.add_ban(user.id, 1)
+
         await ctx.send(f'{user} has been muted.')
 
     @commands.command()  # unmute user
@@ -62,7 +71,15 @@ class AdminCog(commands.Cog):
         try:
             user = ctx.guild.get_member(int(user_id))
             await ctx.guild.ban(user, reason=reason)
-            add_ban(str(user.id))
+
+            # ban counter module
+            offense_count = sql_offenses.get_bancount(user_id)
+            if offense_count:
+                offense_count = offense_count[0]  # result from query is tuple, I need only first (and only) value of tuple
+                sql_offenses.alter_ban(user_id, offense_count + 1)
+            else:
+                sql_offenses.add_ban(user_id, 1)
+
             await ctx.send(f'{user} has been banned.')
         except discord.errors.HTTPException:
             await ctx.send('No user found.')
@@ -86,42 +103,38 @@ class AdminCog(commands.Cog):
     @commands.command()  # checks mutes and bans of user
     @has_permissions(manage_roles=True)
     async def offenses(self, ctx, user_id):
-        ban_count = get_ban_count(user_id)
+        ban_count = sql_offenses.get_bancount(user_id)
         if ban_count:
-            await ctx.send(f'User has {ban_count} offense(s).')
+            await ctx.send(f'User has {ban_count[0]} offense(s).')
         else:
             await ctx.send('User has no offenses.')
 
-    @commands.command()  # add channel to ignored_channels
+    @commands.command(aliases=['add_ignore'])  # add channel to ignored_channels
     @has_permissions(administrator=True)
     async def ignore(self, ctx, channel=None):
-        if channel is None:
+        if channel is None:  # if no channel is provided, the one where the command was called is assigned
             channel = str(ctx.message.channel.id)
-        if not self.bot.get_channel(int(channel)):
+        ch_obj = self.bot.get_channel(int(channel))
+        if not ch_obj:
             await ctx.send('Not a valid channel')
         else:
-            if check_ignore(ctx, channel):  # returns false if channel is in list
-                with open(Vars.ignored_channels, 'a+') as f:
-                    f.write(f'{channel}\n')
+            if not sql_ignored.check_ignore(channel):  # returns true if channel is in list
+                sql_ignored.add_ignored(channel, ch_obj.name)
                 await ctx.send(f'Added `{channel}` to ignored list.')
             else:
                 await ctx.send(f'Channel `{channel}` already ignored.')
 
-    @commands.command()  # remove channel from ignored_channels
+    @commands.command(aliases=['remove_ignore'])  # remove channel from ignored_channels
     @has_permissions(administrator=True)
     async def del_ignore(self, ctx, channel=None):
-        if channel is None:
+        if channel is None:  # if no channel is provided, the one where the command was called is assigned
             channel = str(ctx.message.channel.id)
-        if not self.bot.get_channel(int(channel)):
+        ch_obj = self.bot.get_channel(int(channel))
+        if not ch_obj:
             await ctx.send('Not a valid channel')
         else:
-            if not check_ignore(ctx, channel):  # returns false if channel is in list
-                with open(Vars.ignored_channels, 'r') as f:
-                    lines = f.readlines()
-                with open(Vars.ignored_channels, 'w') as f:
-                    for line in lines:
-                        if line.strip('\n') != channel:
-                            f.write(line)
+            if sql_ignored.check_ignore(channel):  # returns true if channel is in list
+                sql_ignored.remove_ignored(channel)
                 await ctx.send(f'Removed `{channel}` from ignored list.')
             else:
                 await ctx.send(f'Channel `{channel}` is not ignored.')
@@ -129,13 +142,9 @@ class AdminCog(commands.Cog):
     @commands.command()  # lists ignored channels
     @has_permissions(manage_roles=True)
     async def list_ignored(self, ctx):
-        with open(Vars.ignored_channels, 'r') as f:
-            lines = f.readlines()
-        msg = ''
-        for line in lines:
-            line = line.strip('\n')
-            msg += f'<#{line}>\n'
-        await ctx.send(msg)
+        ignored_list = sql_ignored.get_ignored()
+        for ignored in ignored_list:
+            await ctx.send(f'<#{ignored[0]}>\n')
 
     @commands.command()  # adds letmeknow role
     async def letmeknow(self, ctx):
