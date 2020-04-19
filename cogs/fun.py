@@ -11,7 +11,7 @@ class FunCog(commands.Cog):
         self.bot = bot
 
     async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
-        return sql_ignored.check_ignore(ctx.message.channel.id)
+        return not sql_ignored.check_ignore(ctx.message.channel.id)
 
     @commands.command()
     async def morning(self, ctx):
