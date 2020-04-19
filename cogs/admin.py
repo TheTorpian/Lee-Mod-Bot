@@ -161,6 +161,10 @@ class AdminCog(commands.Cog):
         kst_now = utc_now.astimezone(pytz.timezone('Asia/Seoul'))
         await ctx.send(f'Lee\'s time is currently {kst_now.hour}:{kst_now.minute}, {kst_now.day}/{kst_now.month}/{kst_now.year}')
 
+    @commands.command()
+    async def report(self, ctx):
+        await ctx.send('This incident has been reported to the authorities.')
+
 
 def setup(bot):
     bot.add_cog(AdminCog(bot))
