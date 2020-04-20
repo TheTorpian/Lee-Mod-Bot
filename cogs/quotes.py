@@ -33,7 +33,6 @@ class QuotesCog(commands.Cog):
                     for quote in quotes:
                         if fuzz.token_sort_ratio(quote_arg, quote[1]) > 80:
                             quotes_result.append(quote)
-                    # await ctx.send(quotes_result)
                     quote = random.choice(quotes_result)
 
             # final message structuring
