@@ -37,7 +37,6 @@ class QuotesCog(commands.Cog):
                     quote = random.choice(quotes_result)
 
             # final message structuring
-            # time = quote[3].strftime(tformat)  # currently unused
             if quote[1]:
                 final_quote = f'#{quote[0]}: "{quote[2]}" - {quote[1]}'
             else:
@@ -78,19 +77,6 @@ class QuotesCog(commands.Cog):
             await ctx.send(f'Quote #{quote_nr} updated')
         else:
             await ctx.send('Wrong format, use `quote_nr` `"quote"`')
-
-    # @commands.command()  # gets all the quotes from the server
-    # async def quote_list(self, ctx):
-    #     try:
-    #         quotes = sql_quotes.get_quote()
-    #         str_quotes = ''
-    #         for idx, quote in enumerate(quotes, start=1):
-    #             time = quote[3].strftime(tformat)
-    #             str_quote = f'Quote #{idx}: {quote[2]} - {quote[1]} ({time})'
-    #             str_quotes += f'{str_quote}\n'
-    #         await ctx.send(str_quotes)
-    #     except IndexError:
-    #         await ctx.send('No quotes found')
 
 
 def setup(bot):

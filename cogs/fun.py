@@ -10,7 +10,7 @@ class FunCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored
+    async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored (value has to be false, func returns true if ignored)
         return not sql_ignored.check_ignore(ctx.message.channel.id)
 
     @commands.command()
