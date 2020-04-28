@@ -56,6 +56,22 @@ class AdminCog(commands.Cog):
 
         await ctx.send(f'{user} has been muted.')
 
+    @commands.command()  # mute user
+    @has_permissions(manage_roles=True)
+    async def gulag(self, ctx, user: discord.Member):
+        timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
+        await user.add_roles(timeout)
+
+        # ban counter module
+        offense_count = sql_offenses.get_bancount(user.id)
+        if offense_count:
+            offense_count = offense_count[0]  # result from query is tuple, I need only first (and only) value of tuple
+            sql_offenses.alter_ban(user.id, offense_count + 1)
+        else:
+            sql_offenses.add_ban(user.id, 1)
+
+        await ctx.send(f'{user} has been sent to gulag.')
+
     @commands.command()  # unmute user
     @has_permissions(manage_roles=True)
     async def unmute(self, ctx, user: discord.Member):
