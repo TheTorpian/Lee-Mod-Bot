@@ -61,13 +61,13 @@ class QuotesCog(commands.Cog):
         else:
             await ctx.send('Wrong format, do `"quote" - name` or `<link>`')
 
-    @commands.command()  # deletes quote
+    @commands.command(aliases=['delete_quote'])  # deletes quote
     @has_permissions(manage_messages=True)
     async def remove_quote(self, ctx, quote_nr):
         sql_quotes.remove_quote(int(quote_nr))
         await ctx.send(f'Quote #{quote_nr} deleted')
 
-    @commands.command()  # modifies quote for server
+    @commands.command(aliases=['edit_quote'])  # modifies quote for server
     @has_permissions(manage_messages=True)
     async def update_quote(self, ctx, quote_nr: int, quote):
         quote = re.search(r'(")([^"]*)(")', ctx.message.content)
