@@ -1,10 +1,13 @@
+import os
 import discord.utils
 from discord.ext import commands
 from discord.ext.commands import has_permissions
-from tokenfile import Vars
 from datetime import datetime
 from sql import sql_ignored, sql_offenses
 import pytz
+
+poleece_tag = os.getenv('POLEECETAG')
+deleted_messages_channel = os.getenv('DELMSGCHNL')
 
 
 class AdminCog(commands.Cog):
@@ -20,24 +23,24 @@ class AdminCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message_delete(self, message):  # sends an embed message in the message log channel when a message is deleted
         if message.guild.id != 542698023973683220:
-            if message.author.id != Vars.poleece_tag:
+            if message.author.id != poleece_tag:
                 embed = discord.Embed(description='Deleted message', color=0xed1c27)
                 embed.add_field(name='Content', value=message.content, inline=True)
                 embed.add_field(name='Channel', value=message.channel.name, inline=False)
                 embed.set_footer(text=message.author, icon_url=message.author.avatar_url)
-                log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
+                log_channel = self.bot.get_channel(int(deleted_messages_channel))
                 await log_channel.send(embed=embed)
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):  # sends an embed message in the message log channel when a message is edited
         if before.guild.id != 542698023973683220:
-            if before.author.id != Vars.poleece_tag and before.content != after.content:
+            if before.author.id != poleece_tag and before.content != after.content:
                 embed = discord.Embed(description='Edited message', color=0xed1c27)
                 embed.add_field(name='Original', value=before.content, inline=True)
                 embed.add_field(name='Edited', value=after.content, inline=True)
                 embed.add_field(name='Channel', value=before.channel.name, inline=False)
                 embed.set_footer(text=before.author, icon_url=before.author.avatar_url)
-                log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
+                log_channel = self.bot.get_channel(int(deleted_messages_channel))
                 await log_channel.send(embed=embed)
 
     @commands.command()  # mute user

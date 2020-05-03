@@ -1,11 +1,9 @@
+import os
 import discord
 from datetime import datetime
 from discord.ext import commands
-from tokenfile import Vars
-# import subprocess
 
-TOKEN = Vars.TOKEN
-# restart_bat = Vars.restart_bat
+token = os.getenv('TOKEN')
 
 
 def get_prefix(bot, message):
@@ -30,6 +28,7 @@ if __name__ == '__main__':
         bot.load_extension(cog)
 
 
+# legacy reload/restart commands
 # @bot.command(name='reload', pass_context=True)  # reloads all cogs
 # @user_is_torp()
 # async def _reload(ctx):
@@ -58,4 +57,4 @@ async def on_ready():
     print(f'{datetime.now()}')
     print(f'Logged in as {bot.user.name}\n')
 
-bot.run(TOKEN, bot=True, reconnect=True)
+bot.run(token, bot=True, reconnect=True)
