@@ -72,7 +72,7 @@ class QuotesCog(commands.Cog):
     async def update_quote(self, ctx, quote_nr: int, quote):
         quote = re.search(r'(")([^"]*)(")', ctx.message.content)
         if quote:
-            sql_quotes.update_quote(int(quote_nr), str(quote.group(1)))
+            sql_quotes.update_quote(int(quote_nr), str(quote.group(2)))
             await ctx.send(f'Quote #{quote_nr} updated')
         else:
             await ctx.send('Wrong format, use `quote_nr` `"quote"`')
