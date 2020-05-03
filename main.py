@@ -5,7 +5,7 @@ from tokenfile import Vars
 # import subprocess
 
 TOKEN = Vars.TOKEN
-restart_bat = Vars.restart_bat
+# restart_bat = Vars.restart_bat
 
 
 def get_prefix(bot, message):
