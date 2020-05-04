@@ -1,6 +1,9 @@
 from collections import OrderedDict
 from discord.ext import commands
+from tokenfile import Vars
 from sql import sql_ignored
+
+INVITE = Vars.INVITE
 
 
 class HelpCog(commands.Cog):
@@ -18,8 +21,8 @@ class HelpCog(commands.Cog):
         commands['morning'] = ['Good morning to our glorious Supreme Leader']
         commands['quote'] = ['Shows quote #[quote_nr] or a random quote by [user]; if no number or user is given, a random quote is shown', '[quote_nr|user]', 'q']
         commands['add_quote'] = ['Adds quote', '<quote> - <user>']
-        commands['remove_quote'] = ['Removes quote #[quote_nr] (Security only)', '<quote_nr>', 'delete_quote']
-        commands['update_quote'] = ['Updates quote #[quote_nr] (Security only)', '<quote_nr> <"quote">', 'edit_quote']
+        commands['remove_quote'] = ['Removes quote #[quote_nr] (Security only)', '<quote_nr>']
+        commands['update_quote'] = ['Updates quote #[quote_nr] (Security only)', '<quote_nr> <"quote">']
         commands['mute'] = ['Mutes the tagged user (Security only)', '<mention>']
         commands['unmute'] = ['Unmutes the tagged user (Security only)', '<mention>']
         commands['ban'] = ['Bans the tagged user (Security only)', '<mention> [reason] [days to purge]', 'yeet']
@@ -69,6 +72,10 @@ Type {prefix}help [command] for more info on a command.```'''
     async def prefix(self, ctx):  # get the prefix for this server
         prefix = 'l!'
         await ctx.send(f'This server\'s prefix is `{prefix}`\nType {prefix}help to see a list of commands.')
+
+    @commands.command()  # invite link
+    async def invite(self, ctx):
+        await ctx.send(INVITE)
 
 
 def setup(bot):

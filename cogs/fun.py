@@ -1,12 +1,9 @@
-import os
 import re
 import random
 import discord
 from discord.ext import commands
+from tokenfile import Vars
 from sql import sql_ignored
-
-lee_tag = os.getenv('LEETAG')
-poleece_tag = os.getenv('POLEECETAG')
 
 
 class FunCog(commands.Cog):
@@ -22,8 +19,8 @@ class FunCog(commands.Cog):
 
     @commands.command()  # challenge the tagged user
     async def challenge(self, ctx, tag: discord.Member):
-        supreme_user = ctx.guild.get_member(lee_tag)
-        bot_user = ctx.guild.get_member(poleece_tag)
+        supreme_user = ctx.guild.get_member(Vars.lee_tag)
+        bot_user = ctx.guild.get_member(Vars.poleece_tag)
         outcome = random.randint(0, 1)
 
         if tag == bot_user:  # PoLeece Bot never loses

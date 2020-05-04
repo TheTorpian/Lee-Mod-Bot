@@ -1,9 +1,11 @@
-import os
 import discord
 from datetime import datetime
 from discord.ext import commands
+from tokenfile import Vars, user_is_torp
+import subprocess
 
-token = os.getenv('TOKEN')
+TOKEN = Vars.TOKEN
+restart_bat = Vars.restart_bat
 
 
 def get_prefix(bot, message):
@@ -28,26 +30,25 @@ if __name__ == '__main__':
         bot.load_extension(cog)
 
 
-# legacy reload/restart commands
-# @bot.command(name='reload', pass_context=True)  # reloads all cogs
-# @user_is_torp()
-# async def _reload(ctx):
-#     try:
-#         for cog in cogs:
-#             bot.unload_extension(cog)
-#             bot.load_extension(cog)
-#         await ctx.send('Cogs reloaded successfully!')
-#     except Exception:
-#         await ctx.send('An error occurred')
+@bot.command(name='reload', pass_context=True)  # reloads all cogs
+@user_is_torp()
+async def _reload(ctx):
+    try:
+        for cog in cogs:
+            bot.unload_extension(cog)
+            bot.load_extension(cog)
+        await ctx.send('Cogs reloaded successfully!')
+    except Exception:
+        await ctx.send('An error occurred')
 
 
-# @bot.command(name='restart', pass_context=True)  # restarts bot app
-# @user_is_torp()
-# async def _restart(ctx):
-#     await ctx.send('Restarting...')
-#     print('Logging out...\n')
-#     subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
-#     await bot.logout()  # logs out the app
+@bot.command(name='restart', pass_context=True)  # restarts bot app
+@user_is_torp()
+async def _restart(ctx):
+    await ctx.send('Restarting...')
+    print('Logging out...\n')
+    subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
+    await bot.logout()  # logs out the app
 
 
 @bot.event
@@ -57,4 +58,4 @@ async def on_ready():
     print(f'{datetime.now()}')
     print(f'Logged in as {bot.user.name}\n')
 
-bot.run(token, bot=True, reconnect=True)
+bot.run(TOKEN, bot=True, reconnect=True)

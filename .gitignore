@@ -1,2 +1,5 @@
 __pycache__/
 env/
+
+tokenfile.py
+restart.bat
