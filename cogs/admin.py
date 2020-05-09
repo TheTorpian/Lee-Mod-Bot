@@ -94,7 +94,7 @@ class AdminCog(commands.Cog):
                 offense_count = offense_count[0]  # result from query is tuple, I need only first (and only) value of tuple
                 sql_offenses.alter_ban(user_id, offense_count + 1)
             else:
-                sql_offenses.add_ban(user_id, 1)
+                sql_offenses.add_ban(user_id, delete_message_days)
 
             await ctx.send(f'{user} has been banned.')
         except discord.errors.HTTPException:
