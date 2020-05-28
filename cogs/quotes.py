@@ -48,7 +48,7 @@ class QuotesCog(commands.Cog):
     async def add_quote(self, ctx):
         author = re.search(r'(\s[^-"]*$)', ctx.message.content)
         quote = re.search(r'(")([^"]*)(")', ctx.message.content)
-        quote_link = re.search(r'http[s]?://[^ ]+', ctx.message.content)
+        quote_link = re.search(r'http[s]?://[^"]+', ctx.message.content)
 
         if author and quote:  # if both name and quote is provided
             sql_quotes.add_quote(author.group(1)[1:], quote.group(2), ctx.guild.id)
