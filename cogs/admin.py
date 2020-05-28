@@ -171,15 +171,25 @@ class AdminCog(commands.Cog):
             await ctx.author.add_roles(role)
             await ctx.send('Role added!')
 
-    @commands.command()
+    @commands.command()  # returns local time in South Korea
     async def time(self, ctx):
         utc_now = pytz.utc.localize(datetime.utcnow())
         kst_now = utc_now.astimezone(pytz.timezone('Asia/Seoul'))
         await ctx.send(f'Lee\'s time is currently {kst_now.hour}:{kst_now.minute}, {kst_now.day}/{kst_now.month}/{kst_now.year}')
 
-    @commands.command()
+    @commands.command()  # useless report command
     async def report(self, ctx):
         await ctx.send('This incident has been reported to the authorities.')
+
+    @commands.command()  # "catch" a message with funny pics
+    async def catch(self, ctx):
+        await ctx.send(file=discord.File('catch1.png'))
+
+        def check(m):
+            return m.channel == ctx.message.channel
+
+        await self.bot.wait_for('message', check=check)
+        await ctx.send(file=discord.File('catch2.png'))
 
 
 def setup(bot):
