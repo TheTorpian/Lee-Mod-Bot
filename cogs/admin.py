@@ -85,7 +85,7 @@ class AdminCog(commands.Cog):
         else:
             sql_offenses.add_ban(user.id, 1)
 
-        await ctx.send(f'{user} has been sent to gulag.')
+        await ctx.send(f'{user} has been sent to Gulag.')
 
     @commands.command()  # unmute user
     @has_permissions(manage_roles=True)
@@ -93,6 +93,13 @@ class AdminCog(commands.Cog):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         await user.remove_roles(timeout)
         await ctx.send(f'{user} has been unmuted.')
+
+    @commands.command()  # unmute user
+    @has_permissions(manage_roles=True)
+    async def ungulag(self, ctx, user: discord.Member):
+        timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
+        await user.remove_roles(timeout)
+        await ctx.send(f'{user} has been freed from Gulag.')
 
     @commands.command(aliases=['yeet'])  # ban user
     @has_permissions(ban_members=True)
