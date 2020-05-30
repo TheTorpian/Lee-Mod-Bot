@@ -140,12 +140,11 @@ class AdminCog(commands.Cog):
 
     @commands.command()  # attempt to escape from gulag
     async def escape(self, ctx):
-        # gulag_channel = self.bot.get_channel(int(Vars.gulag_channel))
+        gulag_channel = self.bot.get_channel(int(Vars.gulag_channel))
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         cooldown = sql_escape.get_time()
         cooldown = cooldown[0]  # result from query is tuple, I need only first (and only) value of tuple
-        await ctx.send(f'cooldown:{cooldown} current time: {int(time.time())} difference:{int(time.time()) - cooldown}')
-        if (ctx.channel.id == 581468336223944714) and (timeout in ctx.author.roles):
+        if (ctx.channel.id == gulag_channel) and (timeout in ctx.author.roles):
             if int(time.time()) - cooldown > 1800:
                 x = random.choice(range(0, 10000))
                 if x <= 69 and not ctx.author.bot:
