@@ -12,7 +12,8 @@ class QuotesCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['q'])  # gets a random or selected quote from server
+    # gets a random or selected quote from server
+    @commands.command(aliases=['q'])
     async def quote(self, ctx, *quote_arg):
         try:
             quotes = sql_quotes.get_quote()
@@ -22,7 +23,8 @@ class QuotesCog(commands.Cog):
                 quote_arg = random.randint(0, len(quotes) - 1)
                 quote = quotes[quote_arg]
             else:
-                quote_arg = quote_arg[0]  # command args are in a tuple, we only need the first result anyway
+                # command args are in a tuple, we only need the first result anyway
+                quote_arg = quote_arg[0]
                 match_nr = re.match(r'^[0-9]*$', quote_arg)
                 if match_nr:  # if command is called with a quote number
                     quote_arg = int(quote_arg)
@@ -51,11 +53,14 @@ class QuotesCog(commands.Cog):
         quote_link = re.search(r'http[s]?://[^"]+', ctx.message.content)
 
         if author and quote:  # if both name and quote is provided
-            sql_quotes.add_quote(author.group(1)[1:], quote.group(2), ctx.guild.id)
+            sql_quotes.add_quote(author.group(
+                1)[1:], quote.group(2), ctx.guild.id)
             last_quote = sql_quotes.get_last_quote()
             await ctx.send(f'Quote entry #{last_quote[0]} added')
-        elif quote_link:  # if only quote is provided (mainly screenshots/links)
-            sql_quotes.add_quote_no_user(str(quote_link.group(0)), ctx.guild.id)
+        # if only quote is provided (mainly screenshots/links)
+        elif quote_link:
+            sql_quotes.add_quote_no_user(
+                str(quote_link.group(0)), ctx.guild.id)
             last_quote = sql_quotes.get_last_quote()
             await ctx.send(f'Quote entry #{last_quote[0]} added')
         else:
@@ -67,7 +72,8 @@ class QuotesCog(commands.Cog):
         sql_quotes.remove_quote(int(quote_nr))
         await ctx.send(f'Quote #{quote_nr} deleted')
 
-    @commands.command(aliases=['edit_quote', 'mod_quote'])  # modifies quote for server
+    # modifies quote for server
+    @commands.command(aliases=['edit_quote', 'mod_quote'])
     @has_permissions(manage_messages=True)
     async def update_quote(self, ctx, quote_nr: int, quote):
         quote = re.search(r'(")([^"]*)(")', ctx.message.content)

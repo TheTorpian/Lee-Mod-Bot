@@ -27,7 +27,8 @@ class TestCog(commands.Cog):
         embed.add_field(name='Channel', value=ctx.channel.name, inline=False)
         embed.set_footer(text=ctx.author, icon_url=ctx.author.avatar_url)
 
-        log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel_test))
+        log_channel = self.bot.get_channel(
+            int(Vars.deleted_messages_channel_test))
         await log_channel.send(embed=embed)
 
     @commands.command(pass_context=True)  # says args in code block
@@ -46,7 +47,8 @@ class TestCog(commands.Cog):
     async def say(self, ctx, *args):
         await ctx.send(' '.join(args))
 
-    @commands.command(pass_context=True)  # just like say but in a specified channel
+    # just like say but in a specified channel
+    @commands.command(pass_context=True)
     @user_is_torp()
     async def says(self, ctx, ch, *args):
         channel = self.bot.get_channel(int(ch))

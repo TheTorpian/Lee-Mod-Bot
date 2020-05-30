@@ -18,26 +18,39 @@ class AdminCog(commands.Cog):
             await member.add_roles(role)
 
     @commands.Cog.listener()
-    async def on_message_delete(self, message):  # sends an embed message in the message log channel when a message is deleted
+    # sends an embed message in the message log channel when a message is deleted
+    async def on_message_delete(self, message):
         if message.guild.id != 542698023973683220:
             if message.author.id != Vars.poleece_tag:
-                embed = discord.Embed(description='Deleted message', color=0xed1c27)
-                embed.add_field(name='Content', value=message.content, inline=True)
-                embed.add_field(name='Channel', value=message.channel.name, inline=False)
-                embed.set_footer(text=message.author, icon_url=message.author.avatar_url)
-                log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
+                embed = discord.Embed(
+                    description='Deleted message', color=0xed1c27)
+                embed.add_field(
+                    name='Content', value=message.content, inline=True)
+                embed.add_field(
+                    name='Channel', value=message.channel.name, inline=False)
+                embed.set_footer(text=message.author,
+                                 icon_url=message.author.avatar_url)
+                log_channel = self.bot.get_channel(
+                    int(Vars.deleted_messages_channel))
                 await log_channel.send(embed=embed)
 
     @commands.Cog.listener()
-    async def on_message_edit(self, before, after):  # sends an embed message in the message log channel when a message is edited
+    # sends an embed message in the message log channel when a message is edited
+    async def on_message_edit(self, before, after):
         if before.guild.id != 542698023973683220:
             if before.author.id != Vars.poleece_tag and before.content != after.content:
-                embed = discord.Embed(description='Edited message', color=0xed1c27)
-                embed.add_field(name='Original', value=before.content, inline=True)
-                embed.add_field(name='Edited', value=after.content, inline=True)
-                embed.add_field(name='Channel', value=before.channel.name, inline=False)
-                embed.set_footer(text=before.author, icon_url=before.author.avatar_url)
-                log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
+                embed = discord.Embed(
+                    description='Edited message', color=0xed1c27)
+                embed.add_field(name='Original',
+                                value=before.content, inline=True)
+                embed.add_field(
+                    name='Edited', value=after.content, inline=True)
+                embed.add_field(
+                    name='Channel', value=before.channel.name, inline=False)
+                embed.set_footer(text=before.author,
+                                 icon_url=before.author.avatar_url)
+                log_channel = self.bot.get_channel(
+                    int(Vars.deleted_messages_channel))
                 await log_channel.send(embed=embed)
 
     @commands.command()  # mute user
@@ -49,7 +62,8 @@ class AdminCog(commands.Cog):
         # ban counter module
         offense_count = sql_offenses.get_bancount(user.id)
         if offense_count:
-            offense_count = offense_count[0]  # result from query is tuple, I need only first (and only) value of tuple
+            # result from query is tuple, I need only first (and only) value of tuple
+            offense_count = offense_count[0]
             sql_offenses.alter_ban(user.id, offense_count + 1)
         else:
             sql_offenses.add_ban(user.id, 1)
@@ -65,7 +79,8 @@ class AdminCog(commands.Cog):
         # ban counter module
         offense_count = sql_offenses.get_bancount(user.id)
         if offense_count:
-            offense_count = offense_count[0]  # result from query is tuple, I need only first (and only) value of tuple
+            # result from query is tuple, I need only first (and only) value of tuple
+            offense_count = offense_count[0]
             sql_offenses.alter_ban(user.id, offense_count + 1)
         else:
             sql_offenses.add_ban(user.id, 1)
@@ -91,7 +106,8 @@ class AdminCog(commands.Cog):
             # ban counter module
             offense_count = sql_offenses.get_bancount(user_id)
             if offense_count:
-                offense_count = offense_count[0]  # result from query is tuple, I need only first (and only) value of tuple
+                # result from query is tuple, I need only first (and only) value of tuple
+                offense_count = offense_count[0]
                 sql_offenses.alter_ban(user_id, offense_count + 1)
             else:
                 sql_offenses.add_ban(user_id, delete_message_days)
@@ -125,7 +141,8 @@ class AdminCog(commands.Cog):
         else:
             await ctx.send('User has no offenses.')
 
-    @commands.command(aliases=['add_ignore'])  # add channel to ignored_channels
+    # add channel to ignored_channels
+    @commands.command(aliases=['add_ignore'])
     @has_permissions(administrator=True)
     async def ignore(self, ctx, channel=None):
         if channel is None:  # if no channel is provided, the one where the command was called is assigned
@@ -134,13 +151,15 @@ class AdminCog(commands.Cog):
         if not ch_obj:
             await ctx.send('Not a valid channel')
         else:
-            if not sql_ignored.check_ignore(channel):  # returns true if channel is in list
+            # returns true if channel is in list
+            if not sql_ignored.check_ignore(channel):
                 sql_ignored.add_ignored(channel, ch_obj.name)
                 await ctx.send(f'Added `{channel}` to ignored list.')
             else:
                 await ctx.send(f'Channel `{channel}` already ignored.')
 
-    @commands.command(aliases=['remove_ignore'])  # remove channel from ignored_channels
+    # remove channel from ignored_channels
+    @commands.command(aliases=['remove_ignore'])
     @has_permissions(administrator=True)
     async def del_ignore(self, ctx, channel=None):
         if channel is None:  # if no channel is provided, the one where the command was called is assigned
@@ -149,7 +168,8 @@ class AdminCog(commands.Cog):
         if not ch_obj:
             await ctx.send('Not a valid channel')
         else:
-            if sql_ignored.check_ignore(channel):  # returns true if channel is in list
+            # returns true if channel is in list
+            if sql_ignored.check_ignore(channel):
                 sql_ignored.remove_ignored(channel)
                 await ctx.send(f'Removed `{channel}` from ignored list.')
             else:

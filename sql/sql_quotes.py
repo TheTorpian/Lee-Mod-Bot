@@ -36,7 +36,8 @@ def get_quote():  # gets a random quote from current server
     cursor = tokenfile.get_cursor(connection)
     query = 'SELECT id, quoted_tag, quote, tstamp FROM Quote'
     cursor.execute(query,)
-    quotes = cursor.fetchall()  # returns list of tuples, use double index to get actual values
+    # returns list of tuples, use double index to get actual values
+    quotes = cursor.fetchall()
     return quotes
 
 

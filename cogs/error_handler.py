@@ -22,8 +22,10 @@ class CommandErrorHandler(commands.Cog):
         if isinstance(error, ignored):  # return if error should just be ignored
             return
 
-        elif isinstance(error, commands.MissingPermissions):  # user missing perms to use command
-            missing = [perm.replace('_', ' ').replace('guild', 'server').title() for perm in error.missing_perms]
+        # user missing perms to use command
+        elif isinstance(error, commands.MissingPermissions):
+            missing = [perm.replace('_', ' ').replace(
+                'guild', 'server').title() for perm in error.missing_perms]
             if len(missing) > 2:
                 fmt = f'{"**, **".join(missing[:-1])}, and {missing[-1]}'
             else:
@@ -32,7 +34,8 @@ class CommandErrorHandler(commands.Cog):
             await ctx.send(_message)
 
         print(f'Ignoring exception in command {ctx.command}:', file=sys.stderr)
-        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+        traceback.print_exception(
+            type(error), error, error.__traceback__, file=sys.stderr)
         print('\n\n')
 
 
