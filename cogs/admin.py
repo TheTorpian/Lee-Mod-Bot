@@ -146,7 +146,7 @@ class AdminCog(commands.Cog):
         cooldown = cooldown[0]  # result from query is tuple, I need only first (and only) value of tuple
         if (ctx.channel.id == gulag_channel) and (timeout in ctx.author.roles):
             if int(time.time()) - cooldown > 1800:
-                x = random.choice(range(0, 10000))
+                x = random.choice(range(0, 6969))
                 if x <= 69 and not ctx.author.bot:
                     await ctx.author.remove_roles(timeout)
                     await ctx.send('Fuck he escaped')
