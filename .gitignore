@@ -3,3 +3,5 @@ env/
 
 tokenfile.py
 restart.bat
+
+.vscode/
