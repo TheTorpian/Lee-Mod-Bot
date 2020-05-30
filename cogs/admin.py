@@ -3,8 +3,11 @@ from discord.ext import commands
 from discord.ext.commands import has_permissions
 from tokenfile import Vars
 from datetime import datetime
-from sql import sql_ignored, sql_offenses
+from sql import sql_ignored, sql_offenses, sql_escape
 import pytz
+import asyncio
+import random
+import time
 
 
 class AdminCog(commands.Cog):
@@ -17,9 +20,9 @@ class AdminCog(commands.Cog):
         if role not in member.roles:
             await member.add_roles(role)
 
-    @commands.Cog.listener()
-    async def on_message_delete(self, message):  # sends an embed message in the message log channel when a message is deleted
-        if message.guild.id != 542698023973683220:
+    @commands.Cog.listener()  # sends an embed message in the message log channel when a message is deleted
+    async def on_message_delete(self, message):
+        if message.guild.id == 511192102273548292:
             if message.author.id != Vars.poleece_tag:
                 embed = discord.Embed(description='Deleted message', color=0xed1c27)
                 embed.add_field(name='Content', value=message.content, inline=True)
@@ -28,9 +31,9 @@ class AdminCog(commands.Cog):
                 log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
                 await log_channel.send(embed=embed)
 
-    @commands.Cog.listener()
-    async def on_message_edit(self, before, after):  # sends an embed message in the message log channel when a message is edited
-        if before.guild.id != 542698023973683220:
+    @commands.Cog.listener()  # sends an embed message in the message log channel when a message is edited
+    async def on_message_edit(self, before, after):
+        if before.guild.id == 511192102273548292:
             if before.author.id != Vars.poleece_tag and before.content != after.content:
                 embed = discord.Embed(description='Edited message', color=0xed1c27)
                 embed.add_field(name='Original', value=before.content, inline=True)
@@ -39,6 +42,18 @@ class AdminCog(commands.Cog):
                 embed.set_footer(text=before.author, icon_url=before.author.avatar_url)
                 log_channel = self.bot.get_channel(int(Vars.deleted_messages_channel))
                 await log_channel.send(embed=embed)
+
+    @commands.command()  # adds visitor role, allows chatting in gulag for a limited time
+    async def visit(self, ctx):
+        visitor = discord.utils.get(ctx.guild.roles, name='Visitor')
+        gulag_channel = self.bot.get_channel(int(Vars.gulag_channel))
+        await ctx.author.add_roles(visitor)
+        await gulag_channel.send(f'{ctx.author} is now a visitor. You have two minutes as a visitor.')
+        await asyncio.sleep(105)
+        await gulag_channel.send(f'<@{ctx.author.id}>, you have 15 seconds left as a visitor.')
+        await asyncio.sleep(15)
+        await ctx.author.remove_roles(visitor)
+        await gulag_channel.send(f'<@{ctx.author.id}>, your visit has ended.')
 
     @commands.command()  # mute user
     @has_permissions(manage_roles=True)
@@ -56,7 +71,7 @@ class AdminCog(commands.Cog):
 
         await ctx.send(f'{user} has been muted.')
 
-    @commands.command()  # mute user
+    @commands.command()  # same as mute command, but with extra flavour
     @has_permissions(manage_roles=True)
     async def gulag(self, ctx, user: discord.Member):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
@@ -78,6 +93,13 @@ class AdminCog(commands.Cog):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         await user.remove_roles(timeout)
         await ctx.send(f'{user} has been unmuted.')
+
+    @commands.command()  # same as unmute, but with extra flavour
+    @has_permissions(manage_roles=True)
+    async def free(self, ctx, user: discord.Member):
+        timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
+        await user.remove_roles(timeout)
+        await ctx.send(f'{user} has been freed.')
 
     @commands.command(aliases=['yeet'])  # ban user
     @has_permissions(ban_members=True)
@@ -115,6 +137,25 @@ class AdminCog(commands.Cog):
             await ctx.send('No user found or user is not banned.')
         except ValueError:
             await ctx.send('You must provide a user id.')
+
+    @commands.command()  # attempt to escape from gulag
+    async def escape(self, ctx):
+        # gulag_channel = self.bot.get_channel(int(Vars.gulag_channel))
+        timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
+        cooldown = sql_escape.get_time()
+        cooldown = cooldown[0]  # result from query is tuple, I need only first (and only) value of tuple
+        await ctx.send(f'cooldown:{cooldown} current time: {int(time.time())} difference:{int(time.time()) - cooldown}')
+        if (ctx.channel.id == 581468336223944714) and (timeout in ctx.author.roles):
+            if int(time.time()) - cooldown > 1800:
+                x = random.choice(range(0, 10000))
+                if x <= 69 and not ctx.author.bot:
+                    await ctx.author.remove_roles(timeout)
+                    await ctx.send('Fuck he escaped')
+                else:
+                    await ctx.send('You failed to escape.')
+                sql_escape.update_time(int(time.time()))
+            else:
+                await ctx.send('There has been a recent escape attempt already.')
 
     @commands.command()  # checks mutes and bans of user
     @has_permissions(manage_roles=True)
@@ -182,6 +223,7 @@ class AdminCog(commands.Cog):
         await ctx.send('This incident has been reported to the authorities.')
 
     @commands.command()  # "catch" a message with funny pics
+    @has_permissions(manage_roles=True)
     async def catch(self, ctx):
         await ctx.send(file=discord.File('catch1.png'))
 
