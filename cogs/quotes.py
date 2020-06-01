@@ -31,7 +31,7 @@ class QuotesCog(commands.Cog):
                 else:
                     quotes_result = list()
                     for quote in quotes:
-                        if fuzz.token_sort_ratio(quote_arg, quote[1]) > 80:
+                        if (fuzz.token_sort_ratio(quote_arg, quote[1]) > 50) or (quote_arg in quote[2]):
                             quotes_result.append(quote)
                     quote = random.choice(quotes_result)
 
