@@ -46,14 +46,17 @@ class AdminCog(commands.Cog):
     @commands.command()  # adds visitor role, allows chatting in gulag for a limited time
     async def visit(self, ctx):
         visitor = discord.utils.get(ctx.guild.roles, name='Visitor')
-        gulag_channel = self.bot.get_channel(int(Vars.gulag_channel))
-        await ctx.author.add_roles(visitor)
-        await gulag_channel.send(f'{ctx.author} is now a visitor. You have two minutes as a visitor.')
-        await asyncio.sleep(105)
-        await gulag_channel.send(f'<@{ctx.author.id}>, you have 15 seconds left as a visitor.')
-        await asyncio.sleep(15)
-        await ctx.author.remove_roles(visitor)
-        await gulag_channel.send(f'<@{ctx.author.id}>, your visit has ended.')
+        if visitor in ctx.author.roles:
+            gulag_channel = self.bot.get_channel(int(Vars.gulag_channel))
+            await ctx.author.add_roles(visitor)
+            await gulag_channel.send(f'{ctx.author} is now a visitor. You have two minutes as a visitor.')
+            await asyncio.sleep(105)
+            await gulag_channel.send(f'<@{ctx.author.id}>, you have 15 seconds left as a visitor.')
+            await asyncio.sleep(15)
+            await ctx.author.remove_roles(visitor)
+            await gulag_channel.send(f'<@{ctx.author.id}>, your visit has ended.')
+        else:
+            await ctx.send('You\'re already a visitor.')
 
     @commands.command()  # mute user
     @has_permissions(manage_roles=True)
