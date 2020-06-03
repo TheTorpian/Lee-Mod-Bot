@@ -46,7 +46,7 @@ class AdminCog(commands.Cog):
     @commands.command()  # adds visitor role, allows chatting in gulag for a limited time
     async def visit(self, ctx):
         visitor = discord.utils.get(ctx.guild.roles, name='Visitor')
-        if visitor in ctx.author.roles:
+        if visitor not in ctx.author.roles:
             gulag_channel = self.bot.get_channel(int(Vars.gulag_channel))
             await ctx.author.add_roles(visitor)
             await gulag_channel.send(f'{ctx.author} is now a visitor. You have two minutes as a visitor.')
