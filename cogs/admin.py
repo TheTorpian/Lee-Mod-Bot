@@ -159,6 +159,11 @@ class AdminCog(commands.Cog):
             else:
                 await ctx.send('There has been a recent escape attempt already.')
 
+        # rigged escape, in case some guard "accidentally" drops the key
+        # if (ctx.channel == gulag_channel) and (timeout in ctx.author.roles):
+        #     await ctx.author.remove_roles(timeout)
+        #     await ctx.send('Fuck he escaped')
+
     @commands.command()  # checks mutes and bans of user
     @has_permissions(manage_roles=True)
     async def offenses(self, ctx, user_id):
