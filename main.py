@@ -1,11 +1,11 @@
+import os
 import discord
 from datetime import datetime
 from discord.ext import commands
-from tokenfile import Vars, user_is_torp
-import subprocess
+from tokenfile import user_is_torp
+# import subprocess  # windows stuff
 
-TOKEN = Vars.TOKEN
-restart_bat = Vars.restart_bat
+TOKEN = os.getenv('TOKEN')
 
 
 def get_prefix(bot, message):
@@ -42,13 +42,14 @@ async def _reload(ctx):
         await ctx.send('An error occurred')
 
 
-@bot.command(name='restart', pass_context=True)  # restarts bot app
-@user_is_torp()
-async def _restart(ctx):
-    await ctx.send('Restarting...')
-    print('Logging out...\n')
-    subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
-    await bot.logout()  # logs out the app
+# shouldn't need this on linux, just gonna keep it commented
+# @bot.command(name='restart', pass_context=True)  # restarts bot app
+# @user_is_torp()
+# async def _restart(ctx):
+#     await ctx.send('Restarting...')
+#     print('Logging out...\n')
+#     subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
+#     await bot.logout()  # logs out the app
 
 
 @bot.event

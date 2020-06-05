@@ -27,7 +27,7 @@ def remove_ignored(c_id):  # removes channel from db
 
 
 def check_ignore(channel):  # function that checks if channel id is in ignored (returns true if it is)
-        ignored = get_ignored()
-        if channel in ignored[0]:
-            return True
-        return False
+    ignored = get_ignored()
+    if channel in ignored[0]:
+        return True
+    return False

@@ -1,9 +1,6 @@
 from collections import OrderedDict
 from discord.ext import commands
-from tokenfile import Vars
 from sql import sql_ignored
-
-INVITE = Vars.INVITE
 
 
 class HelpCog(commands.Cog):
@@ -76,10 +73,6 @@ Type {prefix}help [command] for more info on a command.```'''
     async def prefix(self, ctx):  # get the prefix for this server
         prefix = 'l!'
         await ctx.send(f'This server\'s prefix is `{prefix}`\nType {prefix}help to see a list of commands.')
-
-    @commands.command()  # invite link
-    async def invite(self, ctx):
-        await ctx.send(INVITE)
 
 
 def setup(bot):
