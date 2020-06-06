@@ -154,6 +154,7 @@ class AdminCog(commands.Cog):
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         cooldown = sql_escape.get_time()
         cooldown = cooldown[0]  # result from query is tuple, I need only first (and only) value of tuple
+
         if (ctx.channel == gulag) and (timeout in ctx.author.roles):
             if int(time.time()) - cooldown > 1800:
                 x = random.choice(range(0, 6969))
