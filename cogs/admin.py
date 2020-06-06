@@ -35,7 +35,7 @@ class AdminCog(commands.Cog):
                 embed.add_field(name='Content', value=message.content, inline=True)
                 embed.add_field(name='Channel', value=message.channel.name, inline=False)
                 embed.set_footer(text=message.author, icon_url=message.author.avatar_url)
-                log_channel = self.bot.get_channel(int(deleted_messages_channel))
+                log_channel = self.bot.get_channel(deleted_messages_channel)
                 await log_channel.send(embed=embed)
 
     @commands.Cog.listener()  # sends an embed message in the message log channel when a message is edited
@@ -47,21 +47,21 @@ class AdminCog(commands.Cog):
                 embed.add_field(name='Edited', value=after.content, inline=True)
                 embed.add_field(name='Channel', value=before.channel.name, inline=False)
                 embed.set_footer(text=before.author, icon_url=before.author.avatar_url)
-                log_channel = self.bot.get_channel(int(deleted_messages_channel))
+                log_channel = self.bot.get_channel(deleted_messages_channel)
                 await log_channel.send(embed=embed)
 
     @commands.command()  # adds visitor role, allows chatting in gulag for a limited time
     async def visit(self, ctx):
         visitor = discord.utils.get(ctx.guild.roles, name='Visitor')
         if visitor not in ctx.author.roles:
-            gulag_channel = self.bot.get_channel(int(gulag_channel))
+            gulag = self.bot.get_channel(gulag_channel)
             await ctx.author.add_roles(visitor)
-            await gulag_channel.send(f'{ctx.author} is now a visitor. You have two minutes as a visitor.')
+            await gulag.send(f'{ctx.author} is now a visitor. You have two minutes as a visitor.')
             await asyncio.sleep(105)
-            await gulag_channel.send(f'<@{ctx.author.id}>, you have 15 seconds left as a visitor.')
+            await gulag.send(f'<@{ctx.author.id}>, you have 15 seconds left as a visitor.')
             await asyncio.sleep(15)
             await ctx.author.remove_roles(visitor)
-            await gulag_channel.send(f'<@{ctx.author.id}>, your visit has ended.')
+            await gulag.send(f'<@{ctx.author.id}>, your visit has ended.')
         else:
             await ctx.send('You\'re already a visitor.')
 
@@ -150,11 +150,11 @@ class AdminCog(commands.Cog):
 
     @commands.command()  # attempt to escape from gulag
     async def escape(self, ctx):
-        gulag_channel = self.bot.get_channel(int(gulag_channel))
+        gulag = self.bot.get_channel(gulag_channel)
         timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
         cooldown = sql_escape.get_time()
         cooldown = cooldown[0]  # result from query is tuple, I need only first (and only) value of tuple
-        if (ctx.channel == gulag_channel) and (timeout in ctx.author.roles):
+        if (ctx.channel == gulag) and (timeout in ctx.author.roles):
             if int(time.time()) - cooldown > 1800:
                 x = random.choice(range(0, 6969))
                 if x <= 69 and not ctx.author.bot:
