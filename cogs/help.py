@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from discord.ext import commands
 from sql import sql_ignored
-
+from datetime import datetime
 
 class HelpCog(commands.Cog):
     def __init__(self, bot):
@@ -74,6 +74,12 @@ Type {prefix}help [command] for more info on a command.```'''
         prefix = 'l!'
         await ctx.send(f'This server\'s prefix is `{prefix}`\nType {prefix}help to see a list of commands.')
 
+    @commands.command()
+    async def ping(self, ctx):
+        time = ctx.message.created_at
+        delta = datetime.now() - time
+        latency = delta.total_seconds() * 1000
+        await ctx.send(f'Pong! Approximate latency is {latency} ms')
 
 def setup(bot):
     bot.add_cog(HelpCog(bot))
