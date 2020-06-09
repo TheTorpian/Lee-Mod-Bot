@@ -95,6 +95,7 @@ class AdminCog(commands.Cog):
         else:
             sql_offenses.add_ban(user.id, 1)
 
+        await ctx.send(file=discord.File('Lee-Mod-Bot/gulag.png'))
         await ctx.send(f'{user} has been sent to gulag.')
 
     @commands.command()  # unmute user
