@@ -77,6 +77,24 @@ class QuotesCog(commands.Cog):
         else:
             await ctx.send('Wrong format, use `quote_nr` `"quote"`')
 
+    @commands.command()  # gets count of how many quotes user has
+    async def qcount(self, ctx, user):
+        q_count = sql_quotes.get_quote_count()  # first element is username, second is quote count
+
+        q_result = list()
+        for quote in q_count:
+            if (fuzz.token_sort_ratio(user, quote[0]) > 50):
+                q_result.append(quote)
+
+        if not q_result:  # if <user> param is not found in db
+            await ctx.send('I have no idea who that is')
+        
+        q_count = q_result[0]  # this is some real tuple fuckery
+        if q_count[1] == 1:
+            await ctx.send(f'{q_count[0]} has said only one interesting thing.')
+        else:
+            await ctx.send(f'{q_count[0]} has said {q_count[1]} interesting things.')
+
 
 def setup(bot):
     bot.add_cog(QuotesCog(bot))

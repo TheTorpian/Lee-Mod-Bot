@@ -20,6 +20,7 @@ class HelpCog(commands.Cog):
         commands['add_quote'] = ['Adds quote', '<quote> - <user>']
         commands['remove_quote'] = ['Removes quote #[quote_nr] (Security only)', '<quote_nr>', 'remove_quote, del_quote']
         commands['update_quote'] = ['Updates quote #[quote_nr] (Security only)', '<quote_nr> <"quote">', 'edit_quote, mod_quote']
+        commands['qcount'] = ['Shows how many quotes <name> has', '<name>']
         commands['visit'] = ['Check out the wonders of the gulag as a visitor for a limited time.']
         commands['mute'] = ['Mutes the tagged user (Security only)', '<mention>']
         commands['gulag'] = ['Sends the tagged user to the gulag (Security only)', '<mention>']

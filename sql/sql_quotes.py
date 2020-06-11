@@ -46,3 +46,11 @@ def get_last_quote():  # gets a random quote from current server
     cursor.execute(query,)
     quotes = cursor.fetchone()  # query result is just one record, this should work
     return quotes
+
+
+def get_quote_count():
+    cursor = tokenfile.get_cursor(connection)
+    query = 'SELECT quoted_tag, count(quoted_tag) FROM Quote GROUP BY quoted_tag'
+    cursor.execute(query,)
+    quote_count = cursor.fetchall()
+    return quote_count
