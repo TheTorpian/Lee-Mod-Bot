@@ -66,6 +66,13 @@ class FunCog(commands.Cog):
         msg = 'https://youtu.be/7wdh3KLm9Xo'
         await ctx.send(msg)
 
+    @commands.command()  # special happy birthday
+    async def hbd(self, ctx):
+        birthday = discord.utils.get(ctx.guild.roles, name='BIRTHDAY KID')
+        for member in ctx.guild.members:
+            if birthday in member.roles:
+                await ctx.send(f'Everyone come say Happy Birthday to {member.mention} and give them attention <:LeeBday:519424058652098560>')
+
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
         await self.egg_pun_deleter(ctx)
