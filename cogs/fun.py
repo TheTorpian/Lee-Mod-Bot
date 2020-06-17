@@ -1,6 +1,7 @@
 import os
 import re
 import random
+import requests
 import discord
 from discord.ext import commands
 from sql import sql_ignored
@@ -72,6 +73,12 @@ class FunCog(commands.Cog):
         for member in ctx.guild.members:
             if birthday in member.roles:
                 await ctx.send(f'Everyone come say Happy Birthday to {member.mention} and give them attention <:LeeBday:519424058652098560>')
+
+    @commands.command()
+    async def dad(self, ctx):
+        req = requests.get('https://icanhazdadjoke.com/', headers = {"Accept": "application/json"})
+        dadjoke = req.json().get('joke')
+        await ctx.send(dadjoke)
 
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
