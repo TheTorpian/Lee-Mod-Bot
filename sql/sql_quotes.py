@@ -25,9 +25,16 @@ def remove_quote(quote_nr):  # removes quote from db
     db.commit()
 
 
-def update_quote(quote_nr, quote):  # alters quote
+def update_quote(quote_nr, quote, quoted_tag):  # alters quote
     cursor = tokenfile.get_cursor(connection)
-    query = 'UPDATE Quote SET quote = %s WHERE id = %s'
+    query = 'UPDATE Quote SET quote = %s, quoted_tag = %s WHERE id = %s'
+    cursor.execute(query, (quote, quoted_tag, quote_nr))
+    db.commit()
+
+
+def update_quote_no_user(quote_nr, quote):  # updates quote to db when no username is provided
+    cursor = tokenfile.get_cursor(connection)
+    query = 'UPDATE Quote SET quote = %s, quoted_tag = NULL WHERE id = %s'
     cursor.execute(query, (quote, quote_nr))
     db.commit()
 

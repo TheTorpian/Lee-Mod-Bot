@@ -36,9 +36,9 @@ class QuotesCog(commands.Cog):
                     quote = random.choice(quotes_result)
 
             # final message structuring
-            if quote[1]:
+            if quote[1]:  # if quote has a quoted_tag value
                 final_quote = f'#{quote[0]}: "{quote[2]}" - {quote[1]}'
-            else:
+            else:  # usually a link
                 final_quote = f'#{quote[0]}: {quote[2]}'
             await ctx.send(final_quote)
         except IndexError:
@@ -69,13 +69,18 @@ class QuotesCog(commands.Cog):
 
     @commands.command(aliases=['edit_quote', 'mod_quote'])  # modifies quote for server
     @has_permissions(manage_messages=True)
-    async def update_quote(self, ctx, quote_nr: int, quote):
+    async def update_quote(self, ctx, quote_nr: int):
+        author = re.search(r'(\s[^-"]*$)', ctx.message.content)
         quote = re.search(r'(")([^"]*)(")', ctx.message.content)
-        if quote:
-            sql_quotes.update_quote(int(quote_nr), str(quote.group(2)))
+        quote_link = re.search(r'http[s]?://[^"]+', ctx.message.content)
+        if author and quote:  # if both name and quote is provided
+            sql_quotes.update_quote(int(quote_nr), str(quote.group(2)), author.group(1)[1:])  # quote_nr, actual quote, quote author
+            await ctx.send(f'Quote #{quote_nr} updated')
+        elif quote_link:  # if only quote is provided (mainly screenshots/links)
+            sql_quotes.update_quote_no_user(int(quote_nr), str(quote_link.group(0)))
             await ctx.send(f'Quote #{quote_nr} updated')
         else:
-            await ctx.send('Wrong format, use `quote_nr` `"quote"`')
+            await ctx.send('Wrong format, use `quote_nr` `"<quote>" - <user>|<link>`')
 
     @commands.command()  # gets count of how many quotes user has
     async def qcount(self, ctx, user):
