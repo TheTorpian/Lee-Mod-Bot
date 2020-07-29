@@ -1,3 +1,5 @@
+import os
+
 from collections import OrderedDict
 from discord.ext import commands
 from sql import sql_ignored
@@ -79,8 +81,18 @@ Type {prefix}help [command] for more info on a command.```'''
     async def ping(self, ctx):
         time = ctx.message.created_at
         delta = datetime.now() - time
-        latency = delta.total_seconds() * 1000
+        latency = round(delta.total_seconds() * 1000, 2)
         await ctx.send(f'Pong! Approximate latency is {latency} ms')
+
+        
+    @commands.command()
+    async def system(self, ctx):
+        CPU_Pct = str(round(float(os.popen('''grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage }' ''').readline()), 2))
+        tot_m, used_m, free_m = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
+
+        string = "```Total Usage:\nCPU Usage    = %5s %%\nTotal Memory = %5s MB\nUsed Memory  = %5s MB\nFree Memory  = %5s MB```" % (CPU_Pct, tot_m, used_m, free_m)
+
+        await ctx.send(string)
 
 def setup(bot):
     bot.add_cog(HelpCog(bot))
