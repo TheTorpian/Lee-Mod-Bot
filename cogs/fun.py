@@ -8,9 +8,11 @@ from sql import sql_ignored
 
 lee_tag = os.getenv('LEETAG')
 poleece_tag = os.getenv('POLEECETAG')
+torp_tag = os.getenv('TORPTAG')
 
 lee_tag = int(lee_tag)
 poleece_tag = int(poleece_tag)
+torp_tag = int(torp_tag)
 
 
 
@@ -27,8 +29,8 @@ class FunCog(commands.Cog):
 
     @commands.command()  # challenge the tagged user
     async def challenge(self, ctx, tag: discord.Member):
-        supreme_user = ctx.guild.get_member(int(lee_tag))
-        bot_user = ctx.guild.get_member(int(poleece_tag))
+        supreme_user = ctx.guild.get_member(lee_tag)
+        bot_user = ctx.guild.get_member(poleece_tag)
         outcome = random.randint(0, 1)
 
         if tag == bot_user:  # PoLeece Bot never loses
@@ -82,7 +84,8 @@ class FunCog(commands.Cog):
 
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
-        await self.egg_pun_deleter(ctx)
+        if ctx.author.id != torp_tag:
+            await self.egg_pun_deleter(ctx)
 
     async def egg_pun_deleter(self, ctx):  # checks for egg in message
         words = re.search(r'egg[^s\s\W]|eggs\w|\w[2:]egg|\wegg\w', ctx.content, re.IGNORECASE)
