@@ -100,7 +100,7 @@ class AdminCog(commands.Cog):
 
         gulag_file = discord.File('Lee-Mod-Bot/gulag.png')
         await ctx.send(file=gulag_file)
-        await ctx.send(f'{user} has been sent to gulag.')
+        await ctx.send(f'What\'s missing from g_lag? U')
 
     @commands.command()  # unmute user
     @has_permissions(manage_roles=True)
@@ -237,10 +237,6 @@ class AdminCog(commands.Cog):
         utc_now = pytz.utc.localize(datetime.utcnow())
         kst_now = utc_now.astimezone(pytz.timezone('Asia/Seoul'))
         await ctx.send(f'Lee\'s time is currently {kst_now.hour}:{kst_now.minute}, {kst_now.day}/{kst_now.month}/{kst_now.year}')
-
-    @commands.command()  # useless report command
-    async def report(self, ctx):
-        await ctx.send('This incident has been reported to the authorities.')
 
     @commands.command()  # "catch" a message with funny pics
     @has_permissions(manage_roles=True)
