@@ -82,13 +82,24 @@ class FunCog(commands.Cog):
         dadjoke = req.json().get('joke')
         await ctx.send(dadjoke)
 
+    @commands.command()  # useless report command
+    async def report(self, ctx):
+        await ctx.send('This incident has been reported to the authorities.')
+
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
         if ctx.author.id != torp_tag:
             await self.egg_pun_deleter(ctx)
+            await self.dead_meme_deleter(ctx)
 
     async def egg_pun_deleter(self, ctx):  # checks for egg in message
         words = re.search(r'egg[^s\s\W]|eggs\w|\w[2:]egg|\wegg\w', ctx.content, re.IGNORECASE)
+        if words is not None:
+            await ctx.delete()
+
+    async def dead_meme_deleter(self, ctx):  # checks for dead memes in message
+        words = re.search(
+            r'^.*?\bh(appy)?\b.*?\bb(irth)?d(ay)?\b.*?\b(love)?lee(face)?\b.*?$', ctx.content, re.IGNORECASE)
         if words is not None:
             await ctx.delete()
 
