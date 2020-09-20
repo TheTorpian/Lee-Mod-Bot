@@ -90,7 +90,7 @@ class FunCog(commands.Cog):
     async def on_message(self, ctx):
         if ctx.author.id != torp_tag:
             await self.egg_pun_deleter(ctx)
-            await self.dead_meme_deleter(ctx)
+            # await self.dead_meme_deleter(ctx)
 
     async def egg_pun_deleter(self, ctx):  # checks for egg in message
         words = re.search(r'egg[^s\s\W]|eggs\w|\w[2:]egg|\wegg\w', ctx.content, re.IGNORECASE)
