@@ -15,7 +15,6 @@ poleece_tag = int(poleece_tag)
 torp_tag = int(torp_tag)
 
 
-
 class FunCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -78,7 +77,7 @@ class FunCog(commands.Cog):
 
     @commands.command()
     async def dad(self, ctx):
-        req = requests.get('https://icanhazdadjoke.com/', headers = {"Accept": "application/json"})
+        req = requests.get('https://icanhazdadjoke.com/', headers={"Accept": "application/json"})
         dadjoke = req.json().get('joke')
         await ctx.send(dadjoke)
 
