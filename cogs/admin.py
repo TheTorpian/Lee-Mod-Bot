@@ -16,6 +16,7 @@ poleece_tag = int(poleece_tag)
 deleted_messages_channel = int(deleted_messages_channel)
 gulag_channel = int(gulag_channel)
 
+
 class AdminCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -98,7 +99,7 @@ class AdminCog(commands.Cog):
         else:
             sql_offenses.add_ban(user.id, 1)
 
-        gulag_file = discord.File('Lee-Mod-Bot/gulag.png')
+        gulag_file = discord.File('gulag.png')
         await ctx.send(file=gulag_file)
         await ctx.send(f'What\'s missing from g_lag? U')
 
