@@ -6,7 +6,7 @@ from tokenfile import user_is_torp
 
 TOKEN = os.getenv('TOKEN')
 intents = discord.Intents.default()
-intents.member = True
+intents.members = True
 
 
 def get_prefix(bot, message):
