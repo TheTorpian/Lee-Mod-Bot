@@ -3,9 +3,10 @@ import discord
 from datetime import datetime
 from discord.ext import commands
 from tokenfile import user_is_torp
-# import subprocess  # windows stuff
 
 TOKEN = os.getenv('TOKEN')
+intents = discord.Intents.default()
+intents.member = True
 
 
 def get_prefix(bot, message):
@@ -22,7 +23,7 @@ cogs = [
     'cogs.error_handler'
 ]
 
-bot = commands.Bot(command_prefix=get_prefix)
+bot = commands.Bot(command_prefix=get_prefix, intents=intents)
 bot.remove_command('help')  # removes default help command
 
 if __name__ == '__main__':
@@ -40,16 +41,6 @@ async def _reload(ctx):
         await ctx.send('Cogs reloaded successfully!')
     except Exception:
         await ctx.send('An error occurred')
-
-
-# shouldn't need this on linux, just gonna keep it commented
-# @bot.command(name='restart', pass_context=True)  # restarts bot app
-# @user_is_torp()
-# async def _restart(ctx):
-#     await ctx.send('Restarting...')
-#     print('Logging out...\n')
-#     subprocess.call(restart_bat)  # calls batch file (it runs the main.py file)
-#     await bot.logout()  # logs out the app
 
 
 @bot.event
