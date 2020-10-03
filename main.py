@@ -5,8 +5,10 @@ from discord.ext import commands
 from tokenfile import user_is_torp
 
 TOKEN = os.getenv('TOKEN')
+# idk how intents actually work yet, just doing what the docs say
 intents = discord.Intents.default()
 intents.members = True
+intents.messages = True
 
 
 def get_prefix(bot, message):
