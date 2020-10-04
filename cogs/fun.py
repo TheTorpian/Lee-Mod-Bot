@@ -98,7 +98,7 @@ class FunCog(commands.Cog):
 
     async def dead_meme_deleter(self, ctx):  # checks for dead memes in message
         words = re.search(
-            r'^.*?\bh(appy)?\b.*?\bb(irth)?d(ay)?\b.*?\b(love)?lee(face)?\b.*?$', ctx.content, re.IGNORECASE)
+            r'^.*?\bh(appy\b.*?\b)?b(irth)?d(ay)?\b.*?\b(love)?lee(face)?\b.*?$', ctx.content, re.IGNORECASE)
         if words is not None:
             await ctx.delete()
 
