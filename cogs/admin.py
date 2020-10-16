@@ -31,12 +31,13 @@ class AdminCog(commands.Cog):
     async def on_message_delete(self, message):
         if message.guild.id == 511192102273548292:  # hardcoded cause I don't want it working in my testing server
             if message.author.id != poleece_tag:  # doesn't show the bot's deleted messages
-                embed = discord.Embed(description='Deleted message', color=0xed1c27)
-                embed.add_field(name='Content', value=message.content, inline=True)
-                embed.add_field(name='Channel', value=message.channel.name, inline=False)
-                embed.set_footer(text=message.author, icon_url=message.author.avatar_url)
-                log_channel = self.bot.get_channel(deleted_messages_channel)
-                await log_channel.send(embed=embed)
+                if message.content != 'h!trick' or message.content != 'h!treat':  # prevent trick or treat commands to show up in the log
+                    embed = discord.Embed(description='Deleted message', color=0xed1c27)
+                    embed.add_field(name='Content', value=message.content, inline=True)
+                    embed.add_field(name='Channel', value=message.channel.name, inline=False)
+                    embed.set_footer(text=message.author, icon_url=message.author.avatar_url)
+                    log_channel = self.bot.get_channel(deleted_messages_channel)
+                    await log_channel.send(embed=embed)
 
     @commands.Cog.listener()  # sends an embed message in the message log channel when a message is edited
     async def on_message_edit(self, before, after):
