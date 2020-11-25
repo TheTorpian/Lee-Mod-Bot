@@ -54,11 +54,12 @@ class FunCog(commands.Cog):
     @commands.command()  # checks mutes and bans of user
     async def offenses(self, ctx, user_id):
         uid = re.search(r'(\d){18}', user_id, re.IGNORECASE)  # dirty solution with regex but it should work
-        ban_count = sql_offenses.get_bancount(uid)
-        if ban_count:
-            await ctx.send(f'User has {ban_count[0]} offense(s).')
-        else:
-            await ctx.send('User has no offenses.')
+        if uid is not None:
+            ban_count = sql_offenses.get_bancount(uid)
+            if ban_count:
+                await ctx.send(f'User has {ban_count[0]} offense(s).')
+            else:
+                await ctx.send('User has no offenses.')
 
     @commands.command()  # adds letmeknow role
     async def letmeknow(self, ctx):
