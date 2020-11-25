@@ -55,7 +55,7 @@ class FunCog(commands.Cog):
     async def offenses(self, ctx, user_id):
         uid = re.search(r'(\d){18}', user_id, re.IGNORECASE)  # dirty solution with regex but it should work
         if uid is not None:
-            ban_count = sql_offenses.get_bancount(uid)
+            ban_count = sql_offenses.get_bancount(user_id)
             if ban_count:
                 await ctx.send(f'User has {ban_count[0]} offense(s).')
             else:
