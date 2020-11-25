@@ -194,17 +194,6 @@ class AdminCog(commands.Cog):
         for ignored in ignored_list:
             await ctx.send(f'<#{ignored[0]}>\n')
 
-    @commands.command()  # "catch" a message with funny pics
-    @has_permissions(manage_roles=True)
-    async def catch(self, ctx):
-        await ctx.send(file=discord.File('Lee-Mod-Bot/catch1.png'))
-
-        def check(m):
-            return m.channel == ctx.message.channel
-
-        await self.bot.wait_for('message', check=check)
-        await ctx.send(file=discord.File('Lee-Mod-Bot/catch2.png'))
-
 
 def setup(bot):
     bot.add_cog(AdminCog(bot))
