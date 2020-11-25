@@ -2,10 +2,7 @@ import os
 import discord.utils
 from discord.ext import commands
 from discord.ext.commands import has_permissions
-from datetime import datetime
 from sql import sql_ignored, sql_offenses, sql_escape
-import pytz
-import asyncio
 import random
 import time
 
@@ -50,25 +47,6 @@ class AdminCog(commands.Cog):
                 embed.set_footer(text=before.author, icon_url=before.author.avatar_url)
                 log_channel = self.bot.get_channel(deleted_messages_channel)
                 await log_channel.send(embed=embed)
-
-    @commands.command()  # adds visitor role, allows chatting in gulag for a limited time
-    async def visit(self, ctx):
-        visitor = discord.utils.get(ctx.guild.roles, name='Visitor')
-        timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
-        if timeout not in ctx.author.roles:
-            if visitor not in ctx.author.roles:
-                gulag = self.bot.get_channel(gulag_channel)
-                await ctx.author.add_roles(visitor)
-                await gulag.send(f'{ctx.author} is now a visitor. You have two minutes as a visitor.')
-                await asyncio.sleep(105)
-                await gulag.send(f'<@{ctx.author.id}>, you have 15 seconds left as a visitor.')
-                await asyncio.sleep(15)
-                await ctx.author.remove_roles(visitor)
-                await gulag.send(f'<@{ctx.author.id}>, your visit has ended.')
-            else:
-                await ctx.send('You\'re already a visitor.')
-        else:
-            await ctx.send('You\'re already here, no need for a visitor pass :)')
 
     @commands.command()  # mute user
     @has_permissions(manage_roles=True)
@@ -179,15 +157,6 @@ class AdminCog(commands.Cog):
         #     await ctx.author.remove_roles(timeout)
         #     await ctx.send('Fuck he escaped')
 
-    @commands.command()  # checks mutes and bans of user
-    @has_permissions(manage_roles=True)
-    async def offenses(self, ctx, user_id):
-        ban_count = sql_offenses.get_bancount(user_id)
-        if ban_count:
-            await ctx.send(f'User has {ban_count[0]} offense(s).')
-        else:
-            await ctx.send('User has no offenses.')
-
     @commands.command(aliases=['add_ignore'])  # add channel to ignored_channels
     @has_permissions(administrator=True)
     async def ignore(self, ctx, channel=None):
@@ -224,21 +193,6 @@ class AdminCog(commands.Cog):
         ignored_list = sql_ignored.get_ignored()
         for ignored in ignored_list:
             await ctx.send(f'<#{ignored[0]}>\n')
-
-    @commands.command()  # adds letmeknow role
-    async def letmeknow(self, ctx):
-        role = discord.utils.get(ctx.author.guild.roles, name='letmeknow')
-        if role in ctx.author.roles:
-            await ctx.send('You already have the role...')
-        else:
-            await ctx.author.add_roles(role)
-            await ctx.send('Role added!')
-
-    @commands.command()  # returns local time in South Korea
-    async def time(self, ctx):
-        utc_now = pytz.utc.localize(datetime.utcnow())
-        kst_now = utc_now.astimezone(pytz.timezone('Asia/Seoul'))
-        await ctx.send(f'Lee\'s time is currently {kst_now.hour}:{kst_now.minute}, {kst_now.day}/{kst_now.month}/{kst_now.year}')
 
     @commands.command()  # "catch" a message with funny pics
     @has_permissions(manage_roles=True)
