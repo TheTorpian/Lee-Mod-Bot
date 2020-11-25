@@ -3,16 +3,21 @@ import re
 import random
 import requests
 import discord
+import asyncio
 from discord.ext import commands
-from sql import sql_ignored
+from datetime import datetime
+from sql import sql_ignored, sql_offenses
+import pytz
 
 lee_tag = os.getenv('LEETAG')
 poleece_tag = os.getenv('POLEECETAG')
 torp_tag = os.getenv('TORPTAG')
+gulag_channel = os.getenv('GULAGCHNL')
 
 lee_tag = int(lee_tag)
 poleece_tag = int(poleece_tag)
 torp_tag = int(torp_tag)
+gulag_channel = int(gulag_channel)
 
 
 class FunCog(commands.Cog):
@@ -22,9 +27,53 @@ class FunCog(commands.Cog):
     async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored (value has to be false, func returns true if ignored)
         return not sql_ignored.check_ignore(ctx.message.channel.id)
 
-    @commands.command()
-    async def morning(self, ctx):
-        await ctx.send('https://tenor.com/view/leader-kim-jong-un-north-korea-gif-8893271')
+    # dead meme
+    # @commands.command()
+    # async def morning(self, ctx):
+    #     await ctx.send('https://tenor.com/view/leader-kim-jong-un-north-korea-gif-8893271')
+
+    @commands.command()  # adds visitor role, allows chatting in gulag for a limited time
+    async def visit(self, ctx):
+        visitor = discord.utils.get(ctx.guild.roles, name='Visitor')
+        timeout = discord.utils.get(ctx.guild.roles, name='Timeout')
+        if timeout not in ctx.author.roles:
+            if visitor not in ctx.author.roles:
+                gulag = self.bot.get_channel(gulag_channel)
+                await ctx.author.add_roles(visitor)
+                await gulag.send(f'{ctx.author} is now a visitor. You have two minutes as a visitor.')
+                await asyncio.sleep(105)
+                await gulag.send(f'<@{ctx.author.id}>, you have 15 seconds left as a visitor.')
+                await asyncio.sleep(15)
+                await ctx.author.remove_roles(visitor)
+                await gulag.send(f'<@{ctx.author.id}>, your visit has ended.')
+            else:
+                await ctx.send('You\'re already a visitor.')
+        else:
+            await ctx.send('You\'re already here, no need for a visitor pass :)')
+
+    @commands.command()  # checks mutes and bans of user
+    async def offenses(self, ctx, user_id):
+        uid = re.search(r'(\d){18}', ctx.content, re.IGNORECASE)  # dirty solution with regex but it should work
+        ban_count = sql_offenses.get_bancount(uid)
+        if ban_count:
+            await ctx.send(f'User has {ban_count[0]} offense(s).')
+        else:
+            await ctx.send('User has no offenses.')
+
+    @commands.command()  # adds letmeknow role
+    async def letmeknow(self, ctx):
+        role = discord.utils.get(ctx.author.guild.roles, name='letmeknow')
+        if role in ctx.author.roles:
+            await ctx.send('You already have the role...')
+        else:
+            await ctx.author.add_roles(role)
+            await ctx.send('Role added!')
+
+    @commands.command()  # returns local time in South Korea
+    async def time(self, ctx):
+        utc_now = pytz.utc.localize(datetime.utcnow())
+        kst_now = utc_now.astimezone(pytz.timezone('Asia/Seoul'))
+        await ctx.send(f'Lee\'s time is currently {kst_now.hour}:{kst_now.minute}, {kst_now.day}/{kst_now.month}/{kst_now.year}')
 
     @commands.command()  # challenge the tagged user
     async def challenge(self, ctx, tag: discord.Member):
@@ -47,26 +96,22 @@ class FunCog(commands.Cog):
                     await ctx.send(f'{ctx.author.display_name} won!')
                     await ctx.send(f'{tag.display_name} lost!')
 
-    @commands.command()  # Happy birthday Lee
-    async def birthday(self, ctx):
-        array = [
-            'https://imgur.com/XKEfXzW',
-            'https://imgur.com/xFTOsJe',
-            'Happy birthday Lee <:LeeBday:519424058652098560>',
-            'https://youtu.be/dq8iDBFvMm8'
-        ]
-        rand = random.randint(0, len(array) - 1)
-        await ctx.send(array[rand])
+    # more dead memes
+    # @commands.command()  # Happy birthday Lee
+    # async def birthday(self, ctx):
+    #     array = [
+    #         'https://imgur.com/XKEfXzW',
+    #         'https://imgur.com/xFTOsJe',
+    #         'Happy birthday Lee <:LeeBday:519424058652098560>',
+    #         'https://youtu.be/dq8iDBFvMm8'
+    #     ]
+    #     rand = random.randint(0, len(array) - 1)
+    #     await ctx.send(array[rand])
 
-    @commands.command()  # best birthday video
-    async def best_birthday(self, ctx):
-        msg = 'https://youtu.be/dq8iDBFvMm8'
-        await ctx.send(msg)
-
-    @commands.command()  # best birthday video
-    async def torp_shag(self, ctx):
-        msg = 'https://youtu.be/7wdh3KLm9Xo'
-        await ctx.send(msg)
+    # @commands.command()  # best birthday video
+    # async def best_birthday(self, ctx):
+    #     msg = 'https://youtu.be/dq8iDBFvMm8'
+    #     await ctx.send(msg)
 
     @commands.command()  # special happy birthday
     async def hbd(self, ctx):
