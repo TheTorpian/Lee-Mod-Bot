@@ -145,7 +145,7 @@ class AdminCog(commands.Cog):
                 x = random.choice(range(0, 6969))
                 if x <= 69 and not ctx.author.bot:
                     await ctx.author.remove_roles(timeout)
-                    await ctx.send('Fuck he escaped')
+                    await ctx.send('Fuck they escaped')
                 else:
                     await ctx.send('You failed to escape.')
                 sql_escape.update_time(int(time.time()))
