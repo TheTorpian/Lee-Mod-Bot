@@ -129,7 +129,7 @@ class FunCog(commands.Cog):
 
     @commands.command()  # useless report command
     async def report(self, ctx):
-        await ctx.send('This incident has been reported to the authorities.')
+        await ctx.send(f'Dear {ctx.author}, we\'re sorry for the inconvenience. Please check the email. The Secret Poleece team.')
 
     @commands.Cog.listener()  # listener, checks every message
     async def on_message(self, ctx):
