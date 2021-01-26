@@ -73,7 +73,7 @@ class FunCog(commands.Cog):
     @commands.command()  # returns local time in South Korea
     async def time(self, ctx):
         utc_now = pytz.utc.localize(datetime.utcnow())
-        kst_now = utc_now.astimezone(pytz.timezone('Asia/Seoul'))
+        kst_now = utc_now.astimezone(pytz.timezone('America/New_York'))
         await ctx.send(f'Lee\'s time is currently {kst_now.hour}:{kst_now.minute}, {kst_now.day}/{kst_now.month}/{kst_now.year}')
 
     @commands.command()  # challenge the tagged user
