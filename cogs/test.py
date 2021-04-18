@@ -1,7 +1,7 @@
 import discord.utils
 from discord.ext import commands
 from tokenfile import user_is_torp
-from sql import sql_offenses
+# from sql import sql_offenses
 
 
 class TestCog(commands.Cog):
@@ -57,14 +57,14 @@ class TestCog(commands.Cog):
         except ValueError:
             await ctx.send('You must provide a user id.')
 
-    @commands.command()
-    @user_is_torp()
-    async def test_banlist(self, ctx, user):
-        offense = sql_offenses.get_bancount(user)
-        if offense:
-            await ctx.send(f'{offense[0]}')
-        else:
-            await ctx.send('result is none')
+    # @commands.command()
+    # @user_is_torp()
+    # async def test_banlist(self, ctx, user):
+    #     offense = sql_offenses.get_bancount(user)
+    #     if offense:
+    #         await ctx.send(f'{offense[0]}')
+    #     else:
+    #         await ctx.send('result is none')
 
     @commands.command()
     @user_is_torp()

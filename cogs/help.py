@@ -2,7 +2,7 @@ import os
 
 from collections import OrderedDict
 from discord.ext import commands
-from sql import sql_ignored
+# from sql import sql_ignored
 from datetime import datetime
 
 
@@ -10,36 +10,36 @@ class HelpCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored (value has to be false, func returns true if ignored)
-        return not sql_ignored.check_ignore(ctx.message.channel.id)
+    # async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored (value has to be false, func returns true if ignored)
+    #     return not sql_ignored.check_ignore(ctx.message.channel.id)
 
     @commands.command(when_mentioned=True, aliases=['commands'])
     async def help(self, ctx, *args):
         commands = OrderedDict()
         commands['letmeknow'] = ['Get the letmeknow role, useful for getting pings when Lee goes live']
         # commands['morning'] = ['Good morning to our glorious Supreme Leader']  # dead meme
-        commands['quote'] = ['Shows quote #[quote_nr] or a random quote by [user]; if no number or user is given, a random quote is shown', '[quote_nr|user]', 'q']
-        commands['add_quote'] = ['Adds quote', '<quote> - <user>']
-        commands['remove_quote'] = ['Removes quote #[quote_nr] (Security only)', '<quote_nr>', 'remove_quote, del_quote']
-        commands['update_quote'] = ['Updates quote #[quote_nr] (Security only)', '<quote_nr> <"quote">', 'edit_quote, mod_quote']
-        commands['qcount'] = ['Shows how many quotes <name> has', '<name>']
+        # commands['quote'] = ['Shows quote #[quote_nr] or a random quote by [user]; if no number or user is given, a random quote is shown', '[quote_nr|user]', 'q']
+        # commands['add_quote'] = ['Adds quote', '<quote> - <user>']
+        # commands['remove_quote'] = ['Removes quote #[quote_nr] (Security only)', '<quote_nr>', 'remove_quote, del_quote']
+        # commands['update_quote'] = ['Updates quote #[quote_nr] (Security only)', '<quote_nr> <"quote">', 'edit_quote, mod_quote']
+        # commands['qcount'] = ['Shows how many quotes <name> has', '<name>']
         commands['time'] = ['Get Lee\'s local time']
         commands['hbd'] = ['Wish a happy birthday to the birthday kid']
         commands['report'] = ['Report an incident to the authorities']
         commands['dad'] = ['Get a random dad joke']
         commands['challenge'] = ['Challenge another user', '<mention>']
-        commands['offenses'] = ['Lists the amount of offenses the user has (Security only)', '<user_id>']
+        # commands['offenses'] = ['Lists the amount of offenses the user has (Security only)', '<user_id>']
         commands['mute'] = ['Mutes the tagged user (Security only)', '<mention>']
         commands['gulag'] = ['Mute command with extra flavour (Security only)', '<mention>']
         commands['unmute'] = ['Unmutes the tagged user (Security only)', '<mention>']
         commands['free'] = ['Unmute command with extra flavour (Security only)', '<mention>']
-        commands['escape'] = ['Attempt to escape from the gulag (in gulag only)']
+        # commands['escape'] = ['Attempt to escape from the gulag (in gulag only)']
         commands['visit'] = ['Check out the wonders of the gulag as a visitor for a limited time']
         commands['ban'] = ['Bans the tagged user (Security only)', '<user_id> [reason] [days to purge]', 'yeet']
         commands['unban'] = ['Unbans the tagged user (Security only)', '<user_id> [reason]', 'unyeet']
-        commands['ignore'] = ['Adds [channel_id] to ignored channels; adds current channel if no parameter is given (Security only)', '[channel_id]', 'add_ignore']
-        commands['del_ignore'] = ['Removes channel [channel_id] from the ignored channel list (Security only)', '[channel_id]', 'remove_ignore']
-        commands['list_ignored'] = ['Lists all ignored channels (Security only)']
+        # commands['ignore'] = ['Adds [channel_id] to ignored channels; adds current channel if no parameter is given (Security only)', '[channel_id]', 'add_ignore']
+        # commands['del_ignore'] = ['Removes channel [channel_id] from the ignored channel list (Security only)', '[channel_id]', 'remove_ignore']
+        # commands['list_ignored'] = ['Lists all ignored channels (Security only)']
         commands['help'] = ['It\'s this command', '[command]', 'commands']
 
         prefix = 'l!'

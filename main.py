@@ -21,7 +21,7 @@ cogs = [
     'cogs.help',
     'cogs.fun',
     'cogs.easteregg',
-    'cogs.quotes',
+    # 'cogs.quotes',
     'cogs.test',
     'cogs.error_handler'
 ]

@@ -6,7 +6,7 @@ import discord
 import asyncio
 from discord.ext import commands
 from datetime import datetime
-from sql import sql_ignored, sql_offenses
+# from sql import sql_ignored, sql_offenses
 import pytz
 
 lee_tag = os.getenv('LEETAG')
@@ -24,8 +24,8 @@ class FunCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored (value has to be false, func returns true if ignored)
-        return not sql_ignored.check_ignore(ctx.message.channel.id)
+    # async def cog_check(self, ctx):  # checks if channel where command was called isn't ignored (value has to be false, func returns true if ignored)
+    #     return not sql_ignored.check_ignore(ctx.message.channel.id)
 
     # dead meme
     # @commands.command()
@@ -51,15 +51,15 @@ class FunCog(commands.Cog):
         else:
             await ctx.send('You\'re already here, no need for a visitor pass :)')
 
-    @commands.command()  # checks mutes and bans of user
-    async def offenses(self, ctx, user_id):
-        uid = re.search(r'(\d){18}', user_id, re.IGNORECASE)  # dirty solution with regex but it should work
-        if uid is not None:
-            ban_count = sql_offenses.get_bancount(uid.group(0))
-            if ban_count:
-                await ctx.send(f'User has {ban_count[0]} offense(s).')
-            else:
-                await ctx.send('User has no offenses.')
+    # @commands.command()  # checks mutes and bans of user
+    # async def offenses(self, ctx, user_id):
+    #     uid = re.search(r'(\d){18}', user_id, re.IGNORECASE)  # dirty solution with regex but it should work
+    #     if uid is not None:
+    #         ban_count = sql_offenses.get_bancount(uid.group(0))
+    #         if ban_count:
+    #             await ctx.send(f'User has {ban_count[0]} offense(s).')
+    #         else:
+    #             await ctx.send('User has no offenses.')
 
     @commands.command()  # adds letmeknow role
     async def letmeknow(self, ctx):
